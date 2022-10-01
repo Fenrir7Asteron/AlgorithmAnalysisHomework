@@ -5,15 +5,26 @@
 #ifndef LAB1HAMMURABI_GAMECONFIG_H
 #define LAB1HAMMURABI_GAMECONFIG_H
 
+#include <string>
 
-#include "Game.h"
+using namespace std;
 
 class GameConfig {
+private:
+    int defaultCitizenCount = 100;
+    int defaultWheatBushels = 2800;
+    int defaultLandAcres = 1000;
+    int maxRoundCount = 10;
 public:
-    static const int DEFAULT_CITIZEN_COUNT = 100;
-    static const int DEFAULT_WHEAT_BUSHELS = 2800;
-    static const int DEFAULT_LAND_ACRES = 1000;
-    static const int MAX_ROUND_COUNT = 10;
+    explicit GameConfig(const string& pathToGameConfig);
+
+    int GetDefaultCitizenCount() const;
+
+    int GetDefaultWheatBushels() const;
+
+    int GetDefaultLandAcres() const;
+
+    int GetMaxRound() const;
 };
 
 

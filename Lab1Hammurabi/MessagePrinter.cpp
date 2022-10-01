@@ -9,6 +9,8 @@ using namespace std;
 void MessagePrinter::PrintRoundStartSummary(GameData data) {
     PrintGreeting();
     PrintYear(data.GetCurrentRound());
+
+    wprintf(L"\tу нас %d бушелей пшена\n", data.GetCurrentWheatBushels());
 }
 
 void MessagePrinter::PrintGreeting() {

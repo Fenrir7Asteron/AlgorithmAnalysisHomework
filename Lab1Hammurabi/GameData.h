@@ -6,13 +6,29 @@
 #define LAB1HAMMURABI_GAMEDATA_H
 
 
+#include "GameConfig.h"
+
 class GameData {
 private:
-    int currentRound = 1;
+    int currentRound;
+    int currentWheatBushels;
+    int currentCitizens;
+    int currentLandAcres;
+
+    int maxRound;
+    int maxWheatBushels;
+    int maxCitizens;
+    int maxLandAcres;
 public:
-    const int GetCurrentRound() const;
+    int GetCurrentRound() const;
 
     void IncrementCurrentRound();
+
+    GameData(const GameConfig config);
+
+    int GetMaxRound() const;
+
+    int GetCurrentWheatBushels() const;
 };
 
 
