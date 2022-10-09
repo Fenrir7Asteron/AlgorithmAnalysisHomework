@@ -1,4 +1,0 @@
-maxRoundCount: 12
-defaultCitizenCount: 100
-defaultWheatBushels: 2800
-defaultLandAcres: 1000

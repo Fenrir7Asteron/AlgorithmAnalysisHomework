@@ -6,8 +6,7 @@ void Game::Play()
     while (!GameOver())
     {
         messagePrinter.PrintRoundStartSummary(gameData);
-//        inputManager.GetRoundInput(messagePrinter, gameData);
-
+        inputManager.GetRoundInput(messagePrinter, gameData);
 
         EndTurn();
     }

@@ -12,23 +12,37 @@ class GameData {
 private:
     int currentRound;
     int currentWheatBushels;
-    int currentCitizens;
+    int currentCitizenCount;
     int currentLandAcres;
+
+    int currentLandPrice;
 
     int maxRound;
     int maxWheatBushels;
     int maxCitizens;
     int maxLandAcres;
+
+    const GameConfig* _config = nullptr;
 public:
     int GetCurrentRound() const;
 
     void IncrementCurrentRound();
 
-    GameData(const GameConfig config);
+    GameData(const GameConfig& config);
 
     int GetMaxRound() const;
 
     int GetCurrentWheatBushels() const;
+
+    int GetCurrentLandPrice() const;
+
+    int GetLandAcreSowPrice() const;
+
+    int GetCurrentLandAcres() const;
+
+    int GetCurrentCitizenCount() const;
+
+    int GetCitizenLandAcresCultivationMaximum() const;
 };
 
 

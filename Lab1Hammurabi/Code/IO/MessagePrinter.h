@@ -8,7 +8,7 @@
 #include <iostream>
 #include <cstdio>
 #include <fcntl.h>
-#include "GameData.h"
+#include "Code/GameData.h"
 
 class MessagePrinter {
 private:
@@ -21,6 +21,22 @@ public:
     }
 
     void PrintRoundStartSummary(GameData data);
+
+    void PrintQuestionHowMuchLandToBuy();
+
+    void PrintQuestionHowMuchWheatToEat();
+
+    void PrintQuestionHowMuchLandToSow();
+
+    void PrintWheatSummary(GameData data);
+
+    void PrintCitizensSummary(GameData data);
+
+    void PrintLandSummary(GameData data);
+
+    void PrintEndSummary();
+
+    void PrintWrongInputReply(GameData data);
 };
 
 

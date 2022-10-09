@@ -1,8 +1,8 @@
 #pragma once
 
-#include "MessagePrinter.h"
+#include "Code/IO/MessagePrinter.h"
 #include "GameData.h"
-#include "UserInputManager.h"
+#include "Code/IO/UserInputManager.h"
 #include "GameConfig.h"
 
 class Game

@@ -6,15 +6,20 @@
 #define LAB1HAMMURABI_GAMECONFIG_H
 
 #include <string>
+#include "DataStructures/IntRange.h"
 
 using namespace std;
 
 class GameConfig {
 private:
+    int maxRoundCount = 10;
     int defaultCitizenCount = 100;
     int defaultWheatBushels = 2800;
     int defaultLandAcres = 1000;
-    int maxRoundCount = 10;
+    int defaultLandAcreSowPrice = 5;
+    int defaultCitizenWheatConsumePerYear = 20;
+    int defaultCitizenLandAcresCultivationMaximum = 10;
+    IntRange defaultLandPriceRange {17, 26};
 public:
     explicit GameConfig(const string& pathToGameConfig);
 
@@ -25,6 +30,14 @@ public:
     int GetDefaultLandAcres() const;
 
     int GetMaxRound() const;
+
+    int GetDefaultLandAcreSowPrice() const;
+
+    int GetDefaultCitizenWheatConsumePerYear() const;
+
+    int GetDefaultCitizenLandAcresCultivationMaximum() const;
+
+    IntRange GetLandPriceRange() const;
 };
 
 
