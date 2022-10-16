@@ -10,17 +10,13 @@
 
 class GameData {
 private:
-    int currentRound;
-    int currentWheatBushels;
-    int currentCitizenCount;
-    int currentLandAcres;
-
-    int currentLandPrice;
-
-    int maxRound;
-    int maxWheatBushels;
-    int maxCitizens;
-    int maxLandAcres;
+    int currentRound_;
+    int currentWheatBushels_;
+    int currentCitizenCount_;
+    int currentLandAcres_;
+    int currentLandPrice_;
+    bool plagueFlag_;
+    bool loseFlag_;
 
     const GameConfig* _config = nullptr;
 public:
@@ -34,8 +30,6 @@ public:
 
     int GetCurrentWheatBushels() const;
 
-    int GetCurrentLandPrice() const;
-
     int GetLandAcreSowPrice() const;
 
     int GetCurrentLandAcres() const;
@@ -43,6 +37,30 @@ public:
     int GetCurrentCitizenCount() const;
 
     int GetCitizenLandAcresCultivationMaximum() const;
+
+    const NumberRange<int> & GetLandPriceRange() const;
+
+    void SetCurrentWheatBushels(int wheatBushels);
+
+    const NumberRange<int> & GetWheatPerLandAcrePriceRange();
+
+    const NumberRange<float> & GetRatWheatDamagePercentRange();
+
+    void SetLandPrice(int landPrice);
+
+    int GetCurrentLandPrice() const;
+
+    int GetWheatNeededForPersonPerYear() const;
+
+    void SetCurrentCitizenCount(int newCitizenCount);
+
+    float GetMaxPlagueProbability() const;
+
+    void SetPlagueFlag(bool plagueFlag);
+
+    void SetLoseFlag(bool loseFlag);
+
+    bool GetLoseFlag() const;
 };
 
 

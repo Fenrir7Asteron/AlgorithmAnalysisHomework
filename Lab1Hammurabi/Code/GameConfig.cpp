@@ -31,7 +31,15 @@ GameConfig::GameConfig(const std::string& pathToGameConfig) {
 
             if (input_parameter == "defaultCitizenLandAcresCultivationMaximum:") strm >> defaultCitizenLandAcresCultivationMaximum;
 
+            if (input_parameter == "defaultWheatNeededForPersonPerYear:") strm >> defaultWheatNeededForPersonPerYear;
+
+            if (input_parameter == "defaultMaxPlagueProbability:") strm >> defaultMaxPlagueProbability;
+
             if (input_parameter == "defaultLandPriceRange:") strm >> defaultLandPriceRange;
+
+            if (input_parameter == "defaultWheatPerLandAcre:") strm >> defaultWheatPerLandAcre;
+
+            if (input_parameter == "defaultRatWheatDamagePercentRange:") strm >> defaultRatWheatDamagePercentRange;
 
             if (input_parameter == "maxRoundCount:") strm >> maxRoundCount;
         }
@@ -68,6 +76,22 @@ int GameConfig::GetDefaultCitizenLandAcresCultivationMaximum() const {
     return defaultCitizenLandAcresCultivationMaximum;
 }
 
-IntRange GameConfig::GetLandPriceRange() const {
+const NumberRange<int> &GameConfig::GetLandPriceRange() const {
     return defaultLandPriceRange;
+}
+
+const NumberRange<int> &GameConfig::GetWheatPerLandAcrePriceRange() const {
+    return defaultWheatPerLandAcre;
+}
+
+const NumberRange<float> &GameConfig::GetRatWheatDamagePercentRange() const {
+    return defaultRatWheatDamagePercentRange;
+}
+
+int GameConfig::GetWheatNeededForPersonPerYear() const {
+    return defaultWheatNeededForPersonPerYear;
+}
+
+float GameConfig::GetMaxPlagueProbability() const {
+    return defaultMaxPlagueProbability;
 }

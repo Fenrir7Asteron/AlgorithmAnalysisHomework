@@ -8,39 +8,31 @@
 GameData::GameData(const GameConfig& config) {
     _config = &config;
 
-    maxRound = config.GetMaxRound();
-    currentRound = 1;
+    currentRound_ = 1;
 
-    maxCitizens = config.GetDefaultCitizenCount();
-    maxWheatBushels = config.GetDefaultWheatBushels();
-    maxLandAcres = config.GetDefaultLandAcres();
+    currentCitizenCount_ = _config->GetDefaultCitizenCount();
+    currentWheatBushels_ = _config->GetDefaultWheatBushels();
+    currentLandAcres_ = _config->GetDefaultLandAcres();
 
-    currentCitizenCount = maxCitizens;
-    currentWheatBushels = maxWheatBushels;
-    currentLandAcres = maxLandAcres;
-
-    const IntRange &landPriceRange = config.GetLandPriceRange();
-    currentLandPrice = rand() % landPriceRange.end + landPriceRange.start;
+    currentLandPrice_ = 0;
+    plagueFlag_ = false;
+    loseFlag_ = false;
 }
 
 int GameData::GetCurrentRound() const {
-    return currentRound;
+    return currentRound_;
 }
 
 void GameData::IncrementCurrentRound() {
-    currentRound++;
+    currentRound_++;
 }
 
 int GameData::GetMaxRound() const {
-    return maxRound;
+    return _config->GetMaxRound();
 }
 
 int GameData::GetCurrentWheatBushels() const {
-    return currentWheatBushels;
-}
-
-int GameData::GetCurrentLandPrice() const {
-    return currentLandPrice;
+    return currentWheatBushels_;
 }
 
 int GameData::GetLandAcreSowPrice() const {
@@ -48,13 +40,61 @@ int GameData::GetLandAcreSowPrice() const {
 }
 
 int GameData::GetCurrentLandAcres() const {
-    return currentLandAcres;
+    return currentLandAcres_;
 }
 
 int GameData::GetCurrentCitizenCount() const {
-    return currentCitizenCount;
+    return currentCitizenCount_;
 }
 
 int GameData::GetCitizenLandAcresCultivationMaximum() const {
     return _config->GetDefaultCitizenLandAcresCultivationMaximum();
+}
+
+void GameData::SetCurrentWheatBushels(int wheatBushels) {
+    currentWheatBushels_ = wheatBushels;
+}
+
+const NumberRange<int> &GameData::GetLandPriceRange() const {
+    return _config->GetLandPriceRange();
+}
+
+const NumberRange<int> &GameData::GetWheatPerLandAcrePriceRange() {
+    return _config->GetWheatPerLandAcrePriceRange();
+}
+
+const NumberRange<float> &GameData::GetRatWheatDamagePercentRange() {
+    return _config->GetRatWheatDamagePercentRange();
+}
+
+void GameData::SetLandPrice(int landPrice) {
+    currentLandPrice_ = landPrice;
+}
+
+int GameData::GetCurrentLandPrice() const {
+    return currentLandPrice_;
+}
+
+int GameData::GetWheatNeededForPersonPerYear() const {
+    return _config->GetWheatNeededForPersonPerYear();
+}
+
+void GameData::SetCurrentCitizenCount(int newCitizenCount) {
+    currentCitizenCount_ = newCitizenCount;
+}
+
+float GameData::GetMaxPlagueProbability() const {
+    return _config->GetMaxPlagueProbability();
+}
+
+void GameData::SetPlagueFlag(bool plagueFlag) {
+    plagueFlag_ = plagueFlag;
+}
+
+void GameData::SetLoseFlag(bool loseFlag) {
+    loseFlag_ = loseFlag;
+}
+
+bool GameData::GetLoseFlag() const {
+    return loseFlag_;
 }

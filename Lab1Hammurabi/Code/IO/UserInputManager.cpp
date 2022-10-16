@@ -27,6 +27,9 @@ void UserInputManager::ReadInput(MessagePrinter& printer, RoundInput &roundInput
     printer.PrintQuestionHowMuchLandToBuy();
     roundInput.landAcresToBuy = ReadInt();
 
+    printer.PrintQuestionHowMuchLandToSell();
+    roundInput.landAcresToSell = ReadInt();
+
     printer.PrintQuestionHowMuchWheatToEat();
     roundInput.wheatBushelsToEat = ReadInt();
 

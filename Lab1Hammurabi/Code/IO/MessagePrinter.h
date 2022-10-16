@@ -37,6 +37,10 @@ public:
     void PrintEndSummary();
 
     void PrintWrongInputReply(GameData data);
+
+    void PrintQuestionHowMuchLandToSell();
+
+    void PrintGameOverMessage(GameData &data);
 };
 
 
