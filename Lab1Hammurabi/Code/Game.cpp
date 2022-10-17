@@ -1,34 +1,48 @@
 #include "Game.h"
 #include "Code/Data/GameConfig.h"
+#include "Code/Data/ResourcesPaths.h"
+
+Game::Game(const GameConfig config) : gameData_(config) {}
 
 void Game::Play()
 {
-    while (!GameOver(gameData))
+    bool firstRound = true;
+
+    while (!GameOver(gameData_))
     {
-        PreRoundSimulation(gameData);
+        if (!firstRound) {
+            if (UserInputManager::ReadGameExitInput())
+                return;
+        }
 
-        messagePrinter.PrintRoundStartSummary(gameData);
+        firstRound = false;
 
-        const RoundInput &roundInput = inputManager.GetRoundInput(messagePrinter, gameData);
 
-        SimulateRoundStep(roundInput, gameData);
+        PreRoundSimulation(gameData_);
+
+        MessagePrinter::PrintRoundStartSummary(gameData_);
+
+        const RoundInput &roundInput = UserInputManager::GetRoundInput(gameData_);
+
+        SimulateRoundStep(roundInput, gameData_);
 
         EndTurn();
+
+        Save(PathToSaveFile);
     }
 
-    messagePrinter.PrintGameOverMessage(gameData);
+    MessagePrinter::PrintGameOverMessage(gameData_);
+    DeleteSaveFile(PathToSaveFile);
 }
 
 bool Game::GameOver(GameData &data) const
 {
-    return gameData.GetCurrentRound() > gameData.GetMaxRound() || data.GetLoseFlag();
+    return gameData_.GetCurrentRound() > gameData_.GetMaxRound() || data.GetLoseFlag();
 }
 
 void Game::EndTurn() {
-    gameData.IncrementCurrentRound();
+    gameData_.IncrementCurrentRound();
 }
-
-Game::Game(const GameConfig config) : gameData(config) {}
 
 void Game::PreRoundSimulation(GameData &data) const {
     int landPrice = GetRandomLandPrice(data);
@@ -75,12 +89,13 @@ void Game::SimulateRoundStep(const RoundInput &roundInput, GameData &data) {
     data.SetWheatEatenByRatsLastYear(wheatEatenByRats);
 
     data.SetCurrentCitizenCount(newCitizenCount);
-    data.PutStarvedToDeathCountToHistory(starvedToDeathCount);
+    data.SetStarvedToDeathCountLastYear(starvedToDeathCount);
+    data.PutStarvedToDeathPercentToHistory((float) starvedToDeathCount / (float) currentCitizenCount);
     data.SetArrivedCitizenCount(arrivedCitizenCount);
 
     data.SetCurrentLandAcres(data.GetCurrentLandAcres() + roundInput.landAcresToBuy - roundInput.landAcresToSell);
 
-    float starvedToDeathPercent = (float) starvedToDeathCount / currentCitizenCount;
+    float starvedToDeathPercent = (float) starvedToDeathCount / (float) currentCitizenCount;
     if (starvedToDeathPercent >= 0.45f)
         data.SetLoseFlag(true);
 }
@@ -106,4 +121,16 @@ bool Game::RollPlagueRandom(const GameData &data) {
     }
 
     return false;
+}
+
+void Game::Load(const char *const pathToSaveFile) {
+    SaveManager::Load(gameData_, pathToSaveFile);
+}
+
+void Game::Save(const char *const pathToSaveFile) {
+    SaveManager::Save(gameData_, PathToSaveFile);
+}
+
+void Game::DeleteSaveFile(const string &pathToSaveFile) {
+    SaveManager::DeleteSaveFile(pathToSaveFile);
 }

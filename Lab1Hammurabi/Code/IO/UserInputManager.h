@@ -12,16 +12,19 @@
 
 class UserInputManager {
 private:
-    template<typename T>
-    std::experimental::optional<T> StringTo(const string &s);
+    static std::experimental::optional<int> StringToInt(const std::string& s );
 
-    void ReadInput(MessagePrinter& printer, RoundInput &roundInput);
-    int ReadInt();
+    static void ReadRoundInput(RoundInput &roundInput);
+    static int ReadInt();
 
 public:
-    RoundInput GetRoundInput(MessagePrinter printer, GameData gameData);
+    static RoundInput GetRoundInput(GameData gameData);
 
-    bool CorrectRoundInput(RoundInput& input, GameData gameData);
+    static bool CorrectRoundInput(RoundInput& input, GameData gameData);
+
+    static bool ReadLoadInput(string &lastSaveDatetime);
+
+    static bool ReadGameExitInput();
 };
 
 

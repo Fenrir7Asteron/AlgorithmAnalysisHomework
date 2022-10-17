@@ -1,4 +1,4 @@
-maxRoundCount: 12
+maxRoundCount: 10
 
 defaultCitizenCount: 100
 defaultWheatBushels: 2800

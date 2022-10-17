@@ -16,31 +16,33 @@ private:
     static void PrintYear(int year);
 
 public:
-    MessagePrinter() {
-        _setmode(_fileno(stdout), _O_U16TEXT);
-    }
+    static void PrintRoundStartSummary(const GameData& data);
 
-    void PrintRoundStartSummary(const GameData& data);
+    static void PrintQuestionHowMuchLandToBuy();
 
-    void PrintQuestionHowMuchLandToBuy();
+    static void PrintQuestionHowMuchWheatToEat();
 
-    void PrintQuestionHowMuchWheatToEat();
+    static void PrintQuestionHowMuchLandToSow();
 
-    void PrintQuestionHowMuchLandToSow();
+    static void PrintWheatSummary(const GameData& data);
 
-    void PrintWheatSummary(const GameData& data);
+    static void PrintCitizensSummary(const GameData& data);
 
-    void PrintCitizensSummary(const GameData& data);
+    static void PrintLandSummary(const GameData& data);
 
-    void PrintLandSummary(const GameData& data);
+    static void PrintEndSummary();
 
-    void PrintEndSummary();
+    static void PrintWrongInputReply(const GameData& data);
 
-    void PrintWrongInputReply(const GameData& data);
+    static void PrintQuestionHowMuchLandToSell();
 
-    void PrintQuestionHowMuchLandToSell();
+    static void PrintGameOverMessage(const GameData &data);
 
-    void PrintGameOverMessage(const GameData &data);
+    static void PrintQuestionLoadGame(string &lastSaveDatetime);
+
+    static void PrintQuestionGameExit();
+
+    static const wstring & SelectCountBasedWord(int count, const wstring& wordSingle, const wstring& wordSeveral, const wstring& wordMany);
 };
 
 

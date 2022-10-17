@@ -13,8 +13,6 @@ GameData::GameData(const GameConfig& config) {
     persistentGameData_.currentCitizenCount_ = _config->GetDefaultCitizenCount();
     persistentGameData_.currentWheatBushels_ = _config->GetDefaultWheatBushels();
     persistentGameData_.currentLandAcres_ = _config->GetDefaultLandAcres();
-
-    currentLandPrice_ = 0;
 }
 
 int GameData::GetCurrentRound() const {
@@ -98,20 +96,28 @@ bool GameData::GetPlagueFlag() const {
 }
 
 void GameData::SetLoseFlag(bool loseFlag) {
-    persistentGameData_.loseFlag_ = loseFlag;
+    loseFlag_ = loseFlag;
 }
 
 bool GameData::GetLoseFlag() const {
-    return persistentGameData_.loseFlag_;
+    return loseFlag_;
 }
 
-void GameData::PutStarvedToDeathCountToHistory(int starvedToDeathCount) {
-    persistentGameData_.starvedToDeathCountHistory_.push_back(starvedToDeathCount);
+void GameData::SetStarvedToDeathCountLastYear(int starvedToDeathCount) {
+    persistentGameData_.starvedToDeathCountLastYear_ = starvedToDeathCount;
+}
+
+void GameData::PutStarvedToDeathPercentToHistory(float starvedToDeathPercent) {
+    persistentGameData_.starvedToDeathPercentAccumulated_ += starvedToDeathPercent;
+}
+
+float GameData::GetAverageStarvedToDeathPercent() const {
+    return persistentGameData_.currentRound_ > 1
+        ? persistentGameData_.starvedToDeathPercentAccumulated_ / (float) (persistentGameData_.currentRound_ - 1) : 0;
 }
 
 int GameData::GetStarvedToDeathCountLastYear() const {
-    return !persistentGameData_.starvedToDeathCountHistory_.empty()
-        ? persistentGameData_.starvedToDeathCountHistory_.back() : 0;
+    return persistentGameData_.starvedToDeathCountLastYear_;
 }
 
 void GameData::SetArrivedCitizenCount(int arrivedCitizenCount) {
@@ -141,4 +147,8 @@ void GameData::SetWheatEatenByRatsLastYear(int wheatEatenByRats) {
 
 int GameData::GetWheatEatenByRatsLastYear() const {
     return persistentGameData_.wheatEatenByRatsLastYear_;
+}
+
+PersistentGameData &GameData::GetPersistentData() {
+    return persistentGameData_;
 }

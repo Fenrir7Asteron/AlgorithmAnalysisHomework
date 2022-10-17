@@ -5,17 +5,17 @@
 #include <sstream>
 #include "UserInputManager.h"
 
-RoundInput UserInputManager::GetRoundInput(MessagePrinter printer, GameData gameData) {
+RoundInput UserInputManager::GetRoundInput(GameData gameData) {
     RoundInput roundInput;
     bool isInputCorrect;
 
     do {
-        ReadInput(printer, roundInput);
+        ReadRoundInput(roundInput);
 
         isInputCorrect = CorrectRoundInput(roundInput, gameData);
 
         if (!isInputCorrect) {
-            printer.PrintWrongInputReply(gameData);
+            MessagePrinter::PrintWrongInputReply(gameData);
         }
 
     } while (!isInputCorrect);
@@ -23,24 +23,50 @@ RoundInput UserInputManager::GetRoundInput(MessagePrinter printer, GameData game
     return roundInput;
 }
 
-void UserInputManager::ReadInput(MessagePrinter& printer, RoundInput &roundInput) {
-    printer.PrintQuestionHowMuchLandToBuy();
+void UserInputManager::ReadRoundInput(RoundInput &roundInput) {
+    MessagePrinter::PrintQuestionHowMuchLandToBuy();
     roundInput.landAcresToBuy = ReadInt();
 
-    printer.PrintQuestionHowMuchLandToSell();
+    MessagePrinter::PrintQuestionHowMuchLandToSell();
     roundInput.landAcresToSell = ReadInt();
 
-    printer.PrintQuestionHowMuchWheatToEat();
+    MessagePrinter::PrintQuestionHowMuchWheatToEat();
     roundInput.wheatBushelsToEat = ReadInt();
 
-    printer.PrintQuestionHowMuchLandToSow();
+    MessagePrinter::PrintQuestionHowMuchLandToSow();
     roundInput.landAcresToSow = ReadInt();
+}
+
+bool UserInputManager::ReadLoadInput(string &lastSaveDatetime) {
+    string answer;
+
+    while (answer != "y" && answer != "n") {
+        MessagePrinter::PrintQuestionLoadGame(lastSaveDatetime);
+        cin >> answer;
+    }
+
+    cin.ignore();
+
+    return answer == "y";
+}
+
+bool UserInputManager::ReadGameExitInput() {
+    string answer;
+
+    while (answer != "y" && answer != "n") {
+        MessagePrinter::PrintQuestionGameExit();
+        cin >> answer;
+    }
+
+    cin.ignore();
+
+    return answer == "y";
 }
 
 int UserInputManager::ReadInt() {
     string s;
     getline( cin, s );
-    auto input = StringTo<int>(s);
+    auto input = StringToInt(s);
     return input ? input.value() : -1;
 }
 
@@ -50,7 +76,7 @@ bool UserInputManager::CorrectRoundInput(RoundInput& input, GameData gameData) {
             + input.landAcresToSow * gameData.GetLandAcreSowPrice();
 
     if (requiredWheatBushels > gameData.GetCurrentWheatBushels()
-        || input.landAcresToSow > gameData.GetCurrentLandAcres() + input.landAcresToBuy
+        || input.landAcresToSow > gameData.GetCurrentLandAcres() + input.landAcresToBuy - input.landAcresToSell
         || input.landAcresToSow > gameData.GetCurrentCitizenCount() * gameData.GetCitizenLandAcresCultivationMaximum()) {
         return false;
     }
@@ -62,11 +88,10 @@ bool UserInputManager::CorrectRoundInput(RoundInput& input, GameData gameData) {
     return true;
 }
 
-template <typename T>
-std::experimental::optional <T> UserInputManager::StringTo(const std::string& s )
+std::experimental::optional<int> UserInputManager::StringToInt(const std::string& s )
 {
     std::istringstream ss( s );
-    T result;
+    int result;
     ss >> result >> std::ws;      // attempt the conversion
     if (ss.eof()) return result;  // success
     return {};                    // failure

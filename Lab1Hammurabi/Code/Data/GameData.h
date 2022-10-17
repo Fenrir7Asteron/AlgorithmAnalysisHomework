@@ -12,7 +12,8 @@
 class GameData {
 private:
     PersistentGameData persistentGameData_;
-    int currentLandPrice_;
+    int currentLandPrice_ = 0;
+    bool loseFlag_ = false;
 
     const GameConfig* _config = nullptr;
 public:
@@ -58,7 +59,7 @@ public:
 
     bool GetLoseFlag() const;
 
-    void PutStarvedToDeathCountToHistory(int starvedToDeathCount);
+    void SetStarvedToDeathCountLastYear(int starvedToDeathCount);
 
     void SetArrivedCitizenCount(int arrivedCitizenCount);
 
@@ -79,6 +80,12 @@ public:
     bool GetPlagueFlag() const;
 
     void SetCurrentLandAcres(int currentLandAcres);
+
+    void PutStarvedToDeathPercentToHistory(float starvedToDeathPercent);
+
+    float GetAverageStarvedToDeathPercent() const;
+
+    PersistentGameData &GetPersistentData();
 };
 
 
