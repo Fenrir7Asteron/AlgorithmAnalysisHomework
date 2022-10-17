@@ -7,16 +7,12 @@
 
 
 #include "GameConfig.h"
+#include "PersistentGameData.h"
 
 class GameData {
 private:
-    int currentRound_;
-    int currentWheatBushels_;
-    int currentCitizenCount_;
-    int currentLandAcres_;
+    PersistentGameData persistentGameData_;
     int currentLandPrice_;
-    bool plagueFlag_;
-    bool loseFlag_;
 
     const GameConfig* _config = nullptr;
 public:
@@ -30,7 +26,7 @@ public:
 
     int GetCurrentWheatBushels() const;
 
-    int GetLandAcreSowPrice() const;
+    float GetLandAcreSowPrice() const;
 
     int GetCurrentLandAcres() const;
 
@@ -42,9 +38,9 @@ public:
 
     void SetCurrentWheatBushels(int wheatBushels);
 
-    const NumberRange<int> & GetWheatPerLandAcrePriceRange();
+    const NumberRange<int> & GetWheatPerLandAcrePriceRange() const;
 
-    const NumberRange<float> & GetRatWheatDamagePercentRange();
+    const NumberRange<float> & GetRatWheatDamagePercentRange() const;
 
     void SetLandPrice(int landPrice);
 
@@ -61,6 +57,28 @@ public:
     void SetLoseFlag(bool loseFlag);
 
     bool GetLoseFlag() const;
+
+    void PutStarvedToDeathCountToHistory(int starvedToDeathCount);
+
+    void SetArrivedCitizenCount(int arrivedCitizenCount);
+
+    void SetWheatCollected(int wheatCollected, int wheatPerLandAcre);
+
+    int GetWheatCollectedLastYear() const;
+
+    int GetWheatPerLandAcre() const;
+
+    void SetWheatEatenByRatsLastYear(int wheatEatenByRats);
+
+    int GetWheatEatenByRatsLastYear() const;
+
+    int GetArrivedCitizenCountLastYear() const;
+
+    int GetStarvedToDeathCountLastYear() const;
+
+    bool GetPlagueFlag() const;
+
+    void SetCurrentLandAcres(int currentLandAcres);
 };
 
 

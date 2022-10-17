@@ -1,9 +1,9 @@
 #pragma once
 
 #include "Code/IO/MessagePrinter.h"
-#include "GameData.h"
+#include "Code/Data/GameData.h"
 #include "Code/IO/UserInputManager.h"
-#include "GameConfig.h"
+#include "Code/Data/GameConfig.h"
 #include "Code/Utils/Random.h"
 
 class Game
@@ -26,12 +26,12 @@ public:
 
     int GetRandomLandPrice(const GameData &data) const;
 
-    int GetRandomWheatPerLandAcre(GameData &data) const;
+    int GetRandomWheatPerLandAcre(const GameData &data) const;
 
-    float GetRandomRatWheatDamagePercent(GameData &data);
+    float GetRandomRatWheatDamagePercent(const GameData &data);
 
     void PreRoundSimulation(GameData &data) const;
 
-    bool RollPlagueRandom(GameData &data);
+    bool RollPlagueRandom(const GameData &data);
 };
 

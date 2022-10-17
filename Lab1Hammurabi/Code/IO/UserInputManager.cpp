@@ -47,7 +47,7 @@ int UserInputManager::ReadInt() {
 bool UserInputManager::CorrectRoundInput(RoundInput& input, GameData gameData) {
     int requiredWheatBushels = input.landAcresToBuy * gameData.GetCurrentLandPrice()
             + input.wheatBushelsToEat
-            + input.landAcresToBuy * gameData.GetLandAcreSowPrice();
+            + input.landAcresToSow * gameData.GetLandAcreSowPrice();
 
     if (requiredWheatBushels > gameData.GetCurrentWheatBushels()
         || input.landAcresToSow > gameData.GetCurrentLandAcres() + input.landAcresToBuy

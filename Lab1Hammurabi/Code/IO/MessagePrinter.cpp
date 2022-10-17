@@ -6,7 +6,7 @@
 
 using namespace std;
 
-void MessagePrinter::PrintRoundStartSummary(GameData data) {
+void MessagePrinter::PrintRoundStartSummary(const GameData& data) {
     PrintGreeting();
     PrintYear(data.GetCurrentRound());
     PrintCitizensSummary(data);
@@ -21,7 +21,7 @@ void MessagePrinter::PrintGreeting() {
 }
 
 void MessagePrinter::PrintYear(int year) {
-    wprintf(L"в году %d твоего высочайшего правления\n", year);
+    wprintf(L"В году %d твоего высочайшего правления\n", year);
 }
 
 void MessagePrinter::PrintQuestionHowMuchLandToBuy() {
@@ -40,15 +40,46 @@ void MessagePrinter::PrintQuestionHowMuchLandToSow() {
     wprintf(L"Сколько акров земли повелеваешь засеять? \n> Повелеваю засеять: ");
 }
 
-void MessagePrinter::PrintWheatSummary(GameData data) {
-    wprintf(L"В амбарах имеется %d бушелей пшеницы\n", data.GetCurrentWheatBushels());
+void MessagePrinter::PrintWheatSummary(const GameData& data) {
+    int wheatCollectedLastYear = data.GetWheatCollectedLastYear();
+    int wheatEatenByRatsLastYear = data.GetWheatEatenByRatsLastYear();
+    if (wheatCollectedLastYear > 0) {
+        wprintf(L"Мы собрали %d бушелей пшеницы, по %d бушеля с акра\n", wheatCollectedLastYear, data.GetWheatPerLandAcre());
+    }
+
+    int currentWheatBushels = data.GetCurrentWheatBushels();
+
+    if (wheatEatenByRatsLastYear > 0) {
+        wprintf(L"Крысы истребили %d бушелей пшеницы, оставив %d бушеля в амбарах\n", wheatEatenByRatsLastYear, currentWheatBushels);
+    } else {
+        wprintf(L"В амбарах имеется %d бушелей пшеницы\n", currentWheatBushels);
+    }
 }
 
-void MessagePrinter::PrintCitizensSummary(GameData data) {
+void MessagePrinter::PrintCitizensSummary(const GameData& data) {
+    int starvedToDeathCountLastYear = data.GetStarvedToDeathCountLastYear();
+    int arrivedCitizenCountLastYear = data.GetArrivedCitizenCountLastYear();
+
+    if (starvedToDeathCountLastYear > 0) {
+        wprintf(L"%d человек умерли с голоду", starvedToDeathCountLastYear);
+
+        if (arrivedCitizenCountLastYear > 0) {
+            wprintf(L", и %d человек прибыли в наш великий город", arrivedCitizenCountLastYear);
+        }
+
+        wprintf(L"\n");
+    } else if (arrivedCitizenCountLastYear > 0) {
+        wprintf(L"%d человек прибыли в наш великий город\n", arrivedCitizenCountLastYear);
+    }
+
+    if (data.GetPlagueFlag()) {
+        wprintf(L"Чума уничтожила половину населения\n");
+    }
+
     wprintf(L"Население города сейчас составляет %d человек\n", data.GetCurrentCitizenCount());
 }
 
-void MessagePrinter::PrintLandSummary(GameData data) {
+void MessagePrinter::PrintLandSummary(const GameData& data) {
     wprintf(L"Город сейчас занимает %d акров\n", data.GetCurrentLandAcres());
     wprintf(L"1 акр земли стоит сейчас %d бушель\n", data.GetCurrentLandPrice());
 }
@@ -57,12 +88,12 @@ void MessagePrinter::PrintEndSummary() {
     wprintf(L"-------------------\n");
 }
 
-void MessagePrinter::PrintWrongInputReply(GameData data) {
+void MessagePrinter::PrintWrongInputReply(const GameData& data) {
     wprintf(L"О, повелитель, пощади нас! У нас только %d человек, %d бушелей пшеницы и %d\n"
             "акров земли!\n", data.GetCurrentCitizenCount(), data.GetCurrentWheatBushels(), data.GetCurrentLandAcres());
 }
 
-void MessagePrinter::PrintGameOverMessage(GameData &data) {
+void MessagePrinter::PrintGameOverMessage(const GameData &data) {
     if (data.GetLoseFlag()) {
         wprintf(L"******------------******\n"
                 "Из-за вашей некомпетентности в "

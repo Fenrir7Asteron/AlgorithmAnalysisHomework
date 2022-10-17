@@ -1,6 +1,6 @@
 #include <iostream>
 #include "Game.h"
-#include "GameConfig.h"
+#include "Code/Data/GameConfig.h"
 
 static const char *const PathToGameConfig = "res/gameConfig.txt";
 

@@ -4,7 +4,7 @@ defaultCitizenCount: 100
 defaultWheatBushels: 2800
 defaultLandAcres: 1000
 
-defaultLandAcreSowPrice: 5
+defaultLandAcreSowPrice: 0.5
 defaultCitizenWheatConsumePerYear: 20
 defaultCitizenLandAcresCultivationMaximum: 10
 defaultWheatNeededForPersonPerYear: 20

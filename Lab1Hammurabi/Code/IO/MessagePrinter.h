@@ -8,7 +8,7 @@
 #include <iostream>
 #include <cstdio>
 #include <fcntl.h>
-#include "Code/GameData.h"
+#include "Code/Data/GameData.h"
 
 class MessagePrinter {
 private:
@@ -20,7 +20,7 @@ public:
         _setmode(_fileno(stdout), _O_U16TEXT);
     }
 
-    void PrintRoundStartSummary(GameData data);
+    void PrintRoundStartSummary(const GameData& data);
 
     void PrintQuestionHowMuchLandToBuy();
 
@@ -28,19 +28,19 @@ public:
 
     void PrintQuestionHowMuchLandToSow();
 
-    void PrintWheatSummary(GameData data);
+    void PrintWheatSummary(const GameData& data);
 
-    void PrintCitizensSummary(GameData data);
+    void PrintCitizensSummary(const GameData& data);
 
-    void PrintLandSummary(GameData data);
+    void PrintLandSummary(const GameData& data);
 
     void PrintEndSummary();
 
-    void PrintWrongInputReply(GameData data);
+    void PrintWrongInputReply(const GameData& data);
 
     void PrintQuestionHowMuchLandToSell();
 
-    void PrintGameOverMessage(GameData &data);
+    void PrintGameOverMessage(const GameData &data);
 };
 
 

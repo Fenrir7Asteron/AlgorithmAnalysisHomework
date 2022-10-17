@@ -1,5 +1,5 @@
 #include "Game.h"
-#include "GameConfig.h"
+#include "Code/Data/GameConfig.h"
 
 void Game::Play()
 {
@@ -49,7 +49,8 @@ void Game::SimulateRoundStep(const RoundInput &roundInput, GameData &data) {
                           + wheatCollected                                          // wheat collected from land
                           ;
 
-    newWheatBushels = max(0, (int) ((float) newWheatBushels * (1.0f - GetRandomRatWheatDamagePercent(data))));
+    int wheatEatenByRats = min(newWheatBushels, (int) ((float) newWheatBushels * (GetRandomRatWheatDamagePercent(data))));
+    newWheatBushels -= wheatEatenByRats;
 
     int currentCitizenCount = data.GetCurrentCitizenCount();
 
@@ -70,7 +71,14 @@ void Game::SimulateRoundStep(const RoundInput &roundInput, GameData &data) {
     }
 
     data.SetCurrentWheatBushels(newWheatBushels);
+    data.SetWheatCollected(wheatCollected, wheatPerLandAcre);
+    data.SetWheatEatenByRatsLastYear(wheatEatenByRats);
+
     data.SetCurrentCitizenCount(newCitizenCount);
+    data.PutStarvedToDeathCountToHistory(starvedToDeathCount);
+    data.SetArrivedCitizenCount(arrivedCitizenCount);
+
+    data.SetCurrentLandAcres(data.GetCurrentLandAcres() + roundInput.landAcresToBuy - roundInput.landAcresToSell);
 
     float starvedToDeathPercent = (float) starvedToDeathCount / currentCitizenCount;
     if (starvedToDeathPercent >= 0.45f)
@@ -82,17 +90,17 @@ int Game::GetRandomLandPrice(const GameData &data) const {
     return Random::GetRandomInRange(range.start, range.end);
 }
 
-int Game::GetRandomWheatPerLandAcre(GameData &data) const {
+int Game::GetRandomWheatPerLandAcre(const GameData &data) const {
     const NumberRange<int> &range = data.GetWheatPerLandAcrePriceRange();
     return Random::GetRandomInRange(range.start, range.end);
 }
 
-float Game::GetRandomRatWheatDamagePercent(GameData &data) {
+float Game::GetRandomRatWheatDamagePercent(const GameData &data) {
     const NumberRange<float> &range = data.GetRatWheatDamagePercentRange();
     return Random::GetRandomInRange(range.start, range.end);
 }
 
-bool Game::RollPlagueRandom(GameData &data) {
+bool Game::RollPlagueRandom(const GameData &data) {
     if (Random::GetRandomInRange(0.0f, 1.0f) <= data.GetMaxPlagueProbability()) {
         return true;
     }

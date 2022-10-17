@@ -6,7 +6,7 @@
 #define LAB1HAMMURABI_GAMECONFIG_H
 
 #include <string>
-#include "DataStructures/NumberRange.h"
+#include "Code/DataStructures/NumberRange.h"
 
 using namespace std;
 
@@ -16,7 +16,7 @@ private:
     int defaultCitizenCount = 100;
     int defaultWheatBushels = 2800;
     int defaultLandAcres = 1000;
-    int defaultLandAcreSowPrice = 5;
+    float defaultLandAcreSowPrice = 0.5f;
     int defaultCitizenWheatConsumePerYear = 20;
     int defaultCitizenLandAcresCultivationMaximum = 10;
     int defaultWheatNeededForPersonPerYear = 20;
@@ -35,7 +35,7 @@ public:
 
     int GetMaxRound() const;
 
-    int GetDefaultLandAcreSowPrice() const;
+    float GetDefaultLandAcreSowPrice() const;
 
     int GetDefaultCitizenWheatConsumePerYear() const;
 

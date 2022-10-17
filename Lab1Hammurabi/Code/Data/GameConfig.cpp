@@ -64,7 +64,7 @@ int GameConfig::GetMaxRound() const {
     return maxRoundCount;
 }
 
-int GameConfig::GetDefaultLandAcreSowPrice() const {
+float GameConfig::GetDefaultLandAcreSowPrice() const {
     return defaultLandAcreSowPrice;
 }
 
