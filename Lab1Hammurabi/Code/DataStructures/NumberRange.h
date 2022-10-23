@@ -17,8 +17,9 @@ class NumberRange {
 public:
     T start, end;
 
-    friend std::istream& operator>>(std::istream &is, NumberRange<int>& range);
-    friend std::istream& operator>>(std::istream &is, NumberRange<float>& range);
+    friend std::istream& operator>>(std::istream &is, NumberRange<T>& range) {
+        return is >> range.start >> range.end;
+    }
 };
 
 

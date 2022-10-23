@@ -13,7 +13,7 @@ add_executable(Lab1Hammurabi
         Code/Data/SaveManager.cpp Code/Data/SaveManager.h Code/Data/ResourcesPaths.h
         Code/IO/MessagePrinter.cpp Code/IO/MessagePrinter.h
         Code/IO/UserInputManager.cpp Code/IO/UserInputManager.h
-        Code/DataStructures/NumberRange.cpp Code/DataStructures/NumberRange.h
+        Code/DataStructures/NumberRange.h
         Code/DataStructures/RoundInput.cpp Code/DataStructures/RoundInput.h
         Code/Utils/Random.cpp Code/Utils/Random.h Code/Data/PersistentGameData.h
         )
