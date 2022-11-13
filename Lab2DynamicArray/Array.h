@@ -118,39 +118,45 @@ public:
         using pointer           = value_type*;  // or also value_type*
         using reference         = value_type&;  // or also value_type&
 
-        explicit Iterator(pointer ptr) : m_ptr(ptr) {}
+        explicit Iterator(pointer ptr, pointer end) : ptr_(ptr), ptrEnd_(end) {}
 
-        reference operator*() const { return *m_ptr; }
-        pointer operator->() { return m_ptr; }
+        reference operator*() const { return *ptr_; }
+        pointer operator->() { return ptr_; }
+
+        const T& get() const { return *ptr_; }
+        void set(const value_type value) { *ptr_ = value; }
+        void next() {operator++();}
+        bool hasNext() const { return ptr_ < ptrEnd_;}
 
         // Prefix increment
-        Iterator& operator++() { m_ptr++; return *this; }
-        Iterator& operator--() { m_ptr--; return *this; }
+        Iterator& operator++() { ptr_++; return *this; }
+        Iterator& operator--() { ptr_--; return *this; }
 
         // Postfix increment
-        Iterator operator++(int) { Iterator tmp = *this; ++(*this); return tmp; }
-        Iterator operator--(int) { Iterator tmp = *this; --(*this); return tmp; }
+        Iterator operator++(value_type) { Iterator tmp = *this; ++(*this); return tmp; }
+        Iterator operator--(value_type) { Iterator tmp = *this; --(*this); return tmp; }
 
-        friend bool operator== (const Iterator& a, const Iterator& b) { return a.m_ptr == b.m_ptr; };
-        friend bool operator!= (const Iterator& a, const Iterator& b) { return a.m_ptr != b.m_ptr; };
-        friend bool operator> (const Iterator& a, const Iterator& b) { return a.m_ptr > b.m_ptr; };
-        friend bool operator>= (const Iterator& a, const Iterator& b) { return a.m_ptr >= b.m_ptr; };
-        friend bool operator< (const Iterator& a, const Iterator& b) { return a.m_ptr < b.m_ptr; };
-        friend bool operator<= (const Iterator& a, const Iterator& b) { return a.m_ptr <= b.m_ptr; };
+        friend bool operator== (const Iterator& a, const Iterator& b) { return a.ptr_ == b.ptr_; };
+        friend bool operator!= (const Iterator& a, const Iterator& b) { return a.ptr_ != b.ptr_; };
+        friend bool operator> (const Iterator& a, const Iterator& b) { return a.ptr_ > b.ptr_; };
+        friend bool operator>= (const Iterator& a, const Iterator& b) { return a.ptr_ >= b.ptr_; };
+        friend bool operator< (const Iterator& a, const Iterator& b) { return a.ptr_ < b.ptr_; };
+        friend bool operator<= (const Iterator& a, const Iterator& b) { return a.ptr_ <= b.ptr_; };
 
     private:
-        pointer m_ptr;
+        pointer ptr_;
+        pointer ptrEnd_;
 
     };
 
-    Iterator<T> begin() { return Iterator<T>(&array_[0]); }
-    Iterator<T> end()   { return Iterator<T>(&array_[size_]); } // array_ is out of bounds
+    Iterator<T> begin() { return Iterator<T>(&array_[0], &array_[size_]); }
+    Iterator<T> end()   { return Iterator<T>(&array_[size_], &array_[size_]); } // array_ is out of bounds
 
     Iterator<T> iterator() { return begin(); }
     Iterator<T> reverseIterator() { return --end(); }
 
-    Iterator<const T> cbegin() const { return Iterator<const T>(&array_[0]); }
-    Iterator<const T> cend() const { return Iterator<const T>(&array_[size_]); } // array_ is out of bounds
+    Iterator<const T> cbegin() const { return Iterator<const T>(&array_[0], &array_[size_]); }
+    Iterator<const T> cend() const { return Iterator<const T>(&array_[size_], &array_[size_]); } // array_ is out of bounds
 
     Iterator<const T> iterator() const { return cbegin(); }
     Iterator<const T> reverseIterator() const { return --cend(); }

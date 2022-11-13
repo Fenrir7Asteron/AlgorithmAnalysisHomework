@@ -19,9 +19,10 @@ int main() {
     }
     cout << endl;
 
-    for (auto it = b.cbegin(), end = b.cend(); it != end; ++it) {
-        cout << *it << " ";
+    for (auto it = b.iterator(); it.hasNext(); it.next()) {
+        std::cout << it.get() << " ";
     }
+
     cout << endl;
 
     for (auto it = b.reverseIterator(), begin = b.begin(); it >= begin; --it) {
