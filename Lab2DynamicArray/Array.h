@@ -133,8 +133,8 @@ public:
         Iterator& operator--() { ptr_--; return *this; }
 
         // Postfix increment
-        Iterator operator++(value_type) { Iterator tmp = *this; ++(*this); return tmp; }
-        Iterator operator--(value_type) { Iterator tmp = *this; --(*this); return tmp; }
+        Iterator operator++(int) { Iterator tmp = *this; ++(*this); return tmp; }
+        Iterator operator--(int) { Iterator tmp = *this; --(*this); return tmp; }
 
         friend bool operator== (const Iterator& a, const Iterator& b) { return a.ptr_ == b.ptr_; };
         friend bool operator!= (const Iterator& a, const Iterator& b) { return a.ptr_ != b.ptr_; };
@@ -153,13 +153,14 @@ public:
     Iterator<T> end()   { return Iterator<T>(&array_[size_], &array_[size_]); } // array_ is out of bounds
 
     Iterator<T> iterator() { return begin(); }
-    Iterator<T> reverseIterator() { return --end(); }
+    std::reverse_iterator<Iterator<T>> reverseIteratorBegin() { return std::make_reverse_iterator(end()); }
+    std::reverse_iterator<Iterator<T>> reverseIteratorEnd() { return std::make_reverse_iterator(begin()); }
 
     Iterator<const T> cbegin() const { return Iterator<const T>(&array_[0], &array_[size_]); }
     Iterator<const T> cend() const { return Iterator<const T>(&array_[size_], &array_[size_]); } // array_ is out of bounds
 
     Iterator<const T> iterator() const { return cbegin(); }
-    Iterator<const T> reverseIterator() const { return --cend(); }
+    std::reverse_iterator<Iterator<const T>> reverseIterator() const { return std::make_reverse_iterator(cend()); }
 
 private:
     const float scale_factor_ = 2.0f;

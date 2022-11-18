@@ -4,7 +4,7 @@ project(Lab2DynamicArray)
 set(CMAKE_CXX_STANDARD 17)
 
 # Lab2DynamicArray target
-add_executable(Lab2DynamicArray Array.h main.cpp)
+add_executable(Lab2DynamicArray Array.h playground_main.cpp)
 
 # --------------------------
 

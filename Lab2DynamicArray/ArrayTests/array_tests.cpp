@@ -120,3 +120,113 @@ TEST(DynamicArrayTestCase, ArrayDestructor) {
 
     ASSERT_EQ(array->size(), 0);
 }
+
+TEST(DynamicArrayTestCase, ArrayForRange) {
+    Array<float> array;
+    int size = 4;
+    float src[size], dst[size];
+    src[0] = 5;
+    src[1] = 5.3f;
+    src[2] = 10.1f;
+    src[3] = 2.0f;
+    
+    for (int i = 0; i < size; ++i) {
+        array.insert(src[i]);
+    }
+
+    for (int i = 0; i < size; ++i) {
+        ASSERT_FLOAT_EQ(src[i], array[i]);
+    }
+
+    int j = 0;
+    for (auto el : array) {
+        dst[j] = el;
+        ++j;
+    }
+
+    for (int i = 0; i < size; ++i) {
+        ASSERT_FLOAT_EQ(src[i], dst[i]);
+    }
+}
+
+TEST(DynamicArrayTestCase, ArrayIterator) {
+    Array<double> array;
+    int size = 4;
+    double src[size], dst[size];
+    src[0] = 5;
+    src[1] = 5.3f;
+    src[2] = 10.1f;
+    src[3] = 2.0f;
+
+    for (int i = 0; i < size; ++i) {
+        array.insert(src[i]);
+    }
+
+    for (int i = 0; i < size; ++i) {
+        ASSERT_FLOAT_EQ(src[i], array[i]);
+    }
+
+    int j = 0;
+    for (auto it = array.iterator(), end = array.end(); it.hasNext(); ++it) {
+        dst[j] = it.get();
+        ++j;
+    }
+
+    for (int i = 0; i < size; ++i) {
+        ASSERT_FLOAT_EQ(src[i], dst[i]);
+    }
+}
+
+TEST(DynamicArrayTestCase, ArrayIteratorSet) {
+    Array<double> array;
+    int size = 4;
+    double src[size];
+    src[0] = 5;
+    src[1] = 5.3f;
+    src[2] = 10.1f;
+    src[3] = 2.0f;
+
+    for (int i = 0; i < size; ++i) {
+        array.insert(src[i]);
+    }
+
+    for (int i = 0; i < size; ++i) {
+        ASSERT_FLOAT_EQ(src[i], array[i]);
+    }
+
+    for (auto it = array.iterator(), end = array.end(); it.hasNext(); ++it) {
+        it.set(2.0f);
+    }
+
+    for (int i = 0; i < size; ++i) {
+        ASSERT_FLOAT_EQ(array[i], 2.0f);
+    }
+}
+
+TEST(DynamicArrayTestCase, ArrayReverseIterator) {
+    Array<double> array;
+    int size = 4;
+    double src[size], dst[size];
+    src[0] = 5;
+    src[1] = 5.3f;
+    src[2] = 10.1f;
+    src[3] = 2.0f;
+
+    for (int i = 0; i < size; ++i) {
+        array.insert(src[i]);
+    }
+
+    for (int i = 0; i < size; ++i) {
+        ASSERT_FLOAT_EQ(src[i], array[i]);
+    }
+
+    int j = 0;
+    for (auto it = array.reverseIteratorBegin(), end = array.reverseIteratorEnd(); it < end; ++it) {
+        dst[j] = *it;
+        ++j;
+    }
+
+    for (int i = 0; i < size; ++i) {
+        ASSERT_FLOAT_EQ(src[i], dst[size - i - 1]);
+    }
+}

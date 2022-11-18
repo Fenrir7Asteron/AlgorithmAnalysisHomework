@@ -25,7 +25,7 @@ int main() {
 
     cout << endl;
 
-    for (auto it = b.reverseIterator(), begin = b.begin(); it >= begin; --it) {
+    for (auto it = b.reverseIteratorBegin(), end = b.reverseIteratorEnd(); it < end; ++it) {
         cout << *it << " ";
     }
     cout << endl;
