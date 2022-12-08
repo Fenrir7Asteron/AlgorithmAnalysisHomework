@@ -1,0 +1,8 @@
+cmake_minimum_required(VERSION 3.22)
+project(Lab4MemoryAllocator)
+
+set(CMAKE_CXX_STANDARD 14)
+
+add_executable(Lab4MemoryAllocator main.cpp
+        MemoryAllocator/MemoryAllocator.cpp MemoryAllocator/MemoryAllocator.h
+        MemoryAllocator/FSA/FSA.cpp MemoryAllocator/FSA/FSA.h MemoryAllocator/FSA/FSAPage.cpp MemoryAllocator/FSA/FSAPage.h MemoryAllocator/FSA/FSABlockMetaData.h MemoryAllocator/FSA/FSAConstants.h)
