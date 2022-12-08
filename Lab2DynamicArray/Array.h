@@ -20,13 +20,13 @@ public:
     explicit Array(int capacity) {
         capacity_ = capacity;
         size_ = 0;
-        array_ = new T[capacity];
+        array_ = (T*) malloc((capacity_ * sizeof(T)));
     }
 
     Array(const Array<T>& other) {
-        T* new_array = (T*) malloc((other.size() * sizeof(T)));
         capacity_ = other.capacity_;
         size_ = other.size();
+        T* new_array = (T*) malloc((capacity_ * sizeof(T)));
 
         for (int i = 0; i < other.size(); ++i) {
             new (new_array + i) T(std::move(other[i]));
@@ -78,6 +78,7 @@ public:
 
         for (int i = size_ - 1; i >= index; --i) {
             new (array_ + i + 1) T(std::move(array_[i]));
+            array_[i].~T();
         }
 
         // copy value to `index` array cell
@@ -92,6 +93,7 @@ public:
         array_[index].~T();
         for (int i = index; i < size_ - 1; ++i) {
             new (array_ + i) T(std::move(array_[i + 1]));
+            array_[i + 1].~T();
         }
 
         --size_;

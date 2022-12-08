@@ -37,29 +37,29 @@ TEST(DynamicArrayTestCase, ArrayIntInsertWithIndexCheck) {
     ASSERT_EQ(array[3], 10);
 }
 
-//TEST(DynamicArrayTestCase, ArrayIntRemoveCheck) {
-//    Array<int> array = Array<int>();
-//    array.insert(3);
-//    ASSERT_EQ(array.size(), 1);
-//    ASSERT_EQ(array[0], 3);
-//
-//    array.remove(0);
-//    ASSERT_EQ(array.size(), 0);
-//
-//    array.insert(3);
-//    array.insert(7);
-//    array.insert(9);
-//    ASSERT_EQ(array.size(), 3);
-//
-//    array.remove(1);
-//    ASSERT_EQ(array.size(), 2);
-//    ASSERT_EQ(array[0], 3);
-//    ASSERT_EQ(array[1], 9);
-//
-//    array.remove(0);
-//    ASSERT_EQ(array.size(), 1);
-//    ASSERT_EQ(array[0], 9);
-//}
+TEST(DynamicArrayTestCase, ArrayIntRemoveCheck) {
+    Array<int> array = Array<int>();
+    array.insert(3);
+    ASSERT_EQ(array.size(), 1);
+    ASSERT_EQ(array[0], 3);
+
+    array.remove(0);
+    ASSERT_EQ(array.size(), 0);
+
+    array.insert(3);
+    array.insert(7);
+    array.insert(9);
+    ASSERT_EQ(array.size(), 3);
+
+    array.remove(1);
+    ASSERT_EQ(array.size(), 2);
+    ASSERT_EQ(array[0], 3);
+    ASSERT_EQ(array[1], 9);
+
+    array.remove(0);
+    ASSERT_EQ(array.size(), 1);
+    ASSERT_EQ(array[0], 9);
+}
 
 TEST(DynamicArrayTestCase, ArrayStringSanityCheck) {
     Array<string> array = Array<string>();
@@ -116,9 +116,7 @@ TEST(DynamicArrayTestCase, ArrayDestructor) {
     array->insert("bfd");
     ASSERT_EQ(array->size(), 2);
 
-    array->~Array();
-
-    ASSERT_EQ(array->size(), 0);
+    delete array;
 }
 
 TEST(DynamicArrayTestCase, ArrayForRange) {

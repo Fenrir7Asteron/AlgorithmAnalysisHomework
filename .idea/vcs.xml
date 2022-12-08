@@ -4,5 +4,6 @@
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/Lab2DynamicArray/ArrayTests/lib/googletest" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/Lab2DynamicArray/Google_tests/lib/googletest" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/Lab3QuickSort/ArrayTests/lib/googletest" vcs="Git" />
   </component>
 </project>
