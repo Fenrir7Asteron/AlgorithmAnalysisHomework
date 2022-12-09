@@ -11,7 +11,7 @@
 class FSAPage {
 public:
     FSAPage *next_page;
-    int free_list_header_;
+    unsigned int free_list_header_;
 
     void Init(const int block_count, const int block_size);
 };

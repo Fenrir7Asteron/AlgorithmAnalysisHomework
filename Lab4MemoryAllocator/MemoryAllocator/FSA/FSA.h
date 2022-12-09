@@ -21,7 +21,8 @@ private:
     int page_size_;
 
     void AllocFirstPage(int page_size);
-    void AllocNewPage(int page_size);
+    void AllocNewPage();
+    void Destroy();
 
     void *Alloc();
 

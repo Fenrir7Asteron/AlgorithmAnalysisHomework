@@ -10,14 +10,19 @@
 class MemoryAllocator {
 public:
     MemoryAllocator();
+    virtual ~MemoryAllocator();
     virtual void init();
+    virtual void destroy();
     virtual void *alloc(size_t size);
+    virtual void *free(void *p);
 
 private:
     static const int FSACount = 6;
     const int PageSizeBytes = 2048;
 
     FSA fsa_list_[FSACount];
+
+    void DestroyFSA();
 };
 
 

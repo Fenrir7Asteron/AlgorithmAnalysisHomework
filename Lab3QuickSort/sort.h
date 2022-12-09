@@ -7,7 +7,7 @@
 #ifndef LAB3QUICKSORT_SORT_H
 #define LAB3QUICKSORT_SORT_H
 
-const int INSERTION_SORT_IS_FASTER_BORDER = 14;
+const int INSERTION_SORT_IS_FASTER_BORDER = 15;
 
 template<class T>
 void move_swap(T& a, T& b)
@@ -92,10 +92,10 @@ void sort(T *first, T *last, Compare comp)
     // base case
     while (last - first > 1)
     {
-//        if (last - first <= INSERTION_SORT_IS_FASTER_BORDER) {
-//            insertion_sort(first, last, comp);
-//            return;
-//        }
+        if (last - first <= INSERTION_SORT_IS_FASTER_BORDER) {
+            insertion_sort(first, last, comp);
+            return;
+        }
 
         T *p = partition(first, last, comp);
 

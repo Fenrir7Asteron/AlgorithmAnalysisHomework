@@ -9,7 +9,9 @@
 
 struct FSABlockMetaData {
 public:
-    int next_free_list_idx = NEXT_FREE_LIST_ITEM_NOT_ASSIGNED;
+    unsigned int next_free_list_idx = NEXT_FREE_LIST_ITEM_NOT_ASSIGNED;
+    unsigned char fsa_idx = -1;
+    unsigned int block_idx = -1;
 };
 
 #endif //LAB4MEMORYALLOCATOR_FSABLOCKMETADATA_H
