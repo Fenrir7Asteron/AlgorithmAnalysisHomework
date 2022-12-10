@@ -42,6 +42,7 @@ public:
 
         other.array_ = nullptr;
         other.size_ = 0;
+        other.capacity_ = 0;
     }
 
     ~Array() {

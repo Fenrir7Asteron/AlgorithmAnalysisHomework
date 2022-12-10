@@ -69,7 +69,7 @@ T* partition(T *first, T *last, Compare comp) {
     return i;
 }
 
-template<typename T, typename Compare>
+template <typename T, typename Compare>
 void insertion_sort(T *first, T *last, Compare comp) {
     for (auto step = first + 1; step < last; ++step) {
         auto key = *step;
@@ -87,8 +87,7 @@ void insertion_sort(T *first, T *last, Compare comp) {
 }
 
 template <typename T, typename Compare>
-void sort(T *first, T *last, Compare comp)
-{
+void sort(T *first, T *last, Compare comp) {
     // base case
     while (last - first > 1)
     {
