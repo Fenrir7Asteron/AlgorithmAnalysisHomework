@@ -32,6 +32,8 @@ int main() {
 
     auto c = std::move(b);
 
+    b = b;
+
     b.insert(1234);
     for (auto it = b.reverseIteratorBegin(), end = b.reverseIteratorEnd(); it < end; ++it) {
         cout << *it << " ";
