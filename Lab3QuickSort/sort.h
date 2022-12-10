@@ -7,7 +7,7 @@
 #ifndef LAB3QUICKSORT_SORT_H
 #define LAB3QUICKSORT_SORT_H
 
-const int INSERTION_SORT_IS_FASTER_BORDER = 15;
+const int INSERTION_SORT_IS_FASTER_BORDER = 14;
 
 template<class T>
 void move_swap(T& a, T& b)
