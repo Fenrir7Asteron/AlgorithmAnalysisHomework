@@ -5,4 +5,8 @@ set(CMAKE_CXX_STANDARD 14)
 
 add_executable(Lab4MemoryAllocator main.cpp
         MemoryAllocator/MemoryAllocator.cpp MemoryAllocator/MemoryAllocator.h
-        MemoryAllocator/FSA/FSA.cpp MemoryAllocator/FSA/FSA.h MemoryAllocator/FSA/FSAPage.cpp MemoryAllocator/FSA/FSAPage.h MemoryAllocator/FSA/FSABlockMetaData.h MemoryAllocator/FSA/FSAConstants.h)
+        MemoryAllocator/FSA/FSA.cpp MemoryAllocator/FSA/FSA.h MemoryAllocator/FSA/FSAPage.cpp MemoryAllocator/FSA/FSAPage.h
+        MemoryAllocator/FSA/FSABlockMetaData.h MemoryAllocator/MemoryAllocatorConstants.h
+        MemoryAllocator/CommonBlockMetaData.cpp MemoryAllocator/CommonBlockMetaData.h
+        MemoryAllocator/CoalesceAllocator/CoalesceAllocator.cpp MemoryAllocator/CoalesceAllocator/CoalesceAllocator.h
+        MemoryAllocator/IMemoryPage.h MemoryAllocator/CoalesceAllocator/CoalescePage.cpp MemoryAllocator/CoalesceAllocator/CoalescePage.h MemoryAllocator/CoalesceAllocator/CoalesceBlockMetaData.h)

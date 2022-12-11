@@ -7,13 +7,14 @@
 
 
 #include "FSAPage.h"
-#include "memoryapi.h"
 
 class FSA {
     explicit FSA(int block_size);
 
     friend class MemoryAllocator;
 public:
+
+    static size_t GetControlBlockSize();
 
 private:
     FSAPage *first_page_ = nullptr;
@@ -29,6 +30,8 @@ private:
     size_t GetActualBlockSize() const;
 
     int GetBlockCount() const;
+
+    void Free(void *p);
 };
 
 

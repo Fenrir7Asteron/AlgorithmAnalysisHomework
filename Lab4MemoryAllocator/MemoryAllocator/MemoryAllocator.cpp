@@ -4,6 +4,7 @@
 
 #include "MemoryAllocator.h"
 #include "FSA/FSABlockMetaData.h"
+#include "CommonBlockMetaData.h"
 
 MemoryAllocator::~MemoryAllocator() {
     DestroyFSA();
@@ -18,25 +19,31 @@ void MemoryAllocator::destroy() {
     DestroyFSA();
 }
 
-MemoryAllocator::MemoryAllocator() : fsa_list_ {
-    FSA(16), FSA(32), FSA(64),
-    FSA(128), FSA(256), FSA(512)} {
-}
+MemoryAllocator::MemoryAllocator() :
+    fsa_list_ {FSA(16), FSA(32), FSA(64),
+    FSA(128), FSA(256), FSA(512)},
+    coalesce_allocator_()
+    {}
 
 void *MemoryAllocator::alloc(size_t size) {
     for (FSA & fsa : fsa_list_) {
         if (fsa.block_size_ >= size)
             return fsa.Alloc();
     }
+    
+    if (size <= MAX_COALESCE_REQUEST_SIZE) {
+        coalesce_allocator_.Alloc(size);
+    }
 }
 
 void *MemoryAllocator::free(void *p) {
-    auto *blockToFree = (FSABlockMetaData*) ((char*) p - sizeof(FSABlockMetaData));
-    size_t actualBlockSize = fsa_list_[blockToFree->fsa_idx].GetActualBlockSize();
-    int block_idx = blockToFree->block_idx;
-    auto *page = (FSAPage*) ((char*) blockToFree - actualBlockSize * block_idx - sizeof(FSAPage));
-    blockToFree->next_free_list_idx = page->free_list_header_;
-    page->free_list_header_ = block_idx;
+
+    auto *commonBlockMetaData = (CommonBlockMetaData*) ((char*) p - sizeof(CommonBlockMetaData));
+
+    if (commonBlockMetaData->type_of_allocator == FSA_ALLOCATOR) {
+        auto *blockToFree = (FSABlockMetaData*) ((char*) p - FSA::GetControlBlockSize());
+        fsa_list_[blockToFree->fsa_idx].Free(p);
+    }
 }
 
 void MemoryAllocator::DestroyFSA() {

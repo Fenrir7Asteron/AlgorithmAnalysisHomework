@@ -6,6 +6,8 @@
 #define LAB4MEMORYALLOCATOR_MEMORYALLOCATOR_H
 
 #include "FSA/FSA.h"
+#include "CoalesceAllocator/CoalesceAllocator.h"
+
 
 class MemoryAllocator {
 public:
@@ -18,9 +20,10 @@ public:
 
 private:
     static const int FSACount = 6;
-    const int PageSizeBytes = 2048;
+    const int PageSizeBytes = 1024 * 1024;
 
     FSA fsa_list_[FSACount];
+    CoalesceAllocator coalesce_allocator_;
 
     void DestroyFSA();
 };
