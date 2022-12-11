@@ -2,12 +2,12 @@
 // Created by biore on 12/8/2022.
 //
 
+#include <cassert>
 #include "MemoryAllocator.h"
-#include "FSA/FSABlockMetaData.h"
-#include "CommonBlockMetaData.h"
+#include "iostream"
 
 MemoryAllocator::~MemoryAllocator() {
-    DestroyFSA();
+    assert(is_destroyed_);
 }
 
 void MemoryAllocator::init() {
@@ -17,6 +17,7 @@ void MemoryAllocator::init() {
 
 void MemoryAllocator::destroy() {
     DestroyFSA();
+    is_destroyed_ = true;
 }
 
 MemoryAllocator::MemoryAllocator() :
@@ -27,8 +28,9 @@ MemoryAllocator::MemoryAllocator() :
 
 void *MemoryAllocator::alloc(size_t size) {
     for (FSA & fsa : fsa_list_) {
-        if (fsa.block_size_ >= size)
+        if (fsa.block_size_ >= size) {
             return fsa.Alloc();
+        }
     }
     
     if (size <= MAX_COALESCE_REQUEST_SIZE) {
@@ -37,12 +39,11 @@ void *MemoryAllocator::alloc(size_t size) {
 }
 
 void *MemoryAllocator::free(void *p) {
-
-    auto *commonBlockMetaData = (CommonBlockMetaData*) ((char*) p - sizeof(CommonBlockMetaData));
-
-    if (commonBlockMetaData->type_of_allocator == FSA_ALLOCATOR) {
-        auto *blockToFree = (FSABlockMetaData*) ((char*) p - FSA::GetControlBlockSize());
-        fsa_list_[blockToFree->fsa_idx].Free(p);
+    for (FSA & fsa : fsa_list_) {
+        if (fsa.Contains(p)) {
+            fsa.Free(p);
+            break;
+        }
     }
 }
 

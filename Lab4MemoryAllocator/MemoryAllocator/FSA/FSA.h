@@ -32,6 +32,8 @@ private:
     int GetBlockCount() const;
 
     void Free(void *p);
+
+    bool Contains(void *p);
 };
 
 

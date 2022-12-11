@@ -21,6 +21,7 @@ public:
 private:
     static const int FSACount = 6;
     const int PageSizeBytes = 1024 * 1024;
+    bool is_destroyed_;
 
     FSA fsa_list_[FSACount];
     CoalesceAllocator coalesce_allocator_;

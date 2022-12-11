@@ -7,7 +7,7 @@
 
 
 struct CommonBlockMetaData {
-    unsigned char type_of_allocator;
+
 };
 
 

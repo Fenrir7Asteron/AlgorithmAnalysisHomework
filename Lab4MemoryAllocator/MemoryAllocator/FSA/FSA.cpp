@@ -2,10 +2,8 @@
 // Created by biore on 12/8/2022.
 //
 
-#include <cassert>
 #include "FSA.h"
 #include "FSABlockMetaData.h"
-#include "../CommonBlockMetaData.h"
 
 FSA::FSA(int block_size) {
     block_size_ = block_size;
@@ -14,26 +12,18 @@ FSA::FSA(int block_size) {
 void FSA::AllocFirstPage(const int page_size) {
     page_size_ = page_size;
 
-    int block_count = GetBlockCount();
-
-    size_t page_size_with_metadata = block_count * (GetActualBlockSize()) + sizeof(FSAPage);
-
-    first_page_ = FSAPage::AllocNewPage(page_size_with_metadata);
-    first_page_->Init(block_count, block_size_);
+    first_page_ = FSAPage::AllocNewPage(page_size_);
+    first_page_->Init(GetBlockCount(), block_size_);
 }
 
 void FSA::AllocNewPage() {
-    int block_count = GetBlockCount();
-
-    size_t page_size_with_metadata = block_count * (GetActualBlockSize()) + sizeof(FSAPage);
-
     FSAPage* last_page = first_page_;
     while (last_page->next_page != nullptr) {
         last_page = last_page->next_page;
     }
 
-    last_page->next_page = FSAPage::AllocNewPage(page_size_with_metadata);
-    last_page->next_page->Init(block_count, block_size_);
+    last_page->next_page = FSAPage::AllocNewPage(page_size_);
+    last_page->next_page->Init(GetBlockCount(), block_size_);
 }
 
 void FSA::Destroy() {
@@ -47,8 +37,6 @@ void FSA::Destroy() {
 
 int FSA::GetBlockCount() const { return page_size_ / block_size_; }
 
-size_t FSA::GetActualBlockSize() const { return block_size_ + GetControlBlockSize(); }
-
 void *FSA::Alloc() {
     FSAPage *page = first_page_;
     FSABlockMetaData *free_block = nullptr;
@@ -60,38 +48,45 @@ void *FSA::Alloc() {
                 AllocNewPage();
             page = page->next_page;
 
-        } else if (page->free_list_header == NEXT_FREE_LIST_ITEM_NOT_ASSIGNED) {
-
-            page->free_list_header = 0;
-            free_block = (FSABlockMetaData *) ((char*) page + sizeof(FSAPage));
-
         } else {
-            free_block = (FSABlockMetaData *) (((char *) page) + sizeof(FSAPage) + (page->free_list_header * GetActualBlockSize()));
+            free_block = (FSABlockMetaData *) (((char *) page) + (page->free_list_header * block_size_));
         }
     } while (free_block == nullptr);
 
-    int new_free_list_header = free_block->next_free_list_idx;
+    page->free_list_header = free_block->next_free_list_idx;
 
-    if (new_free_list_header == NEXT_FREE_LIST_ITEM_NOT_ASSIGNED) {
-        new_free_list_header = page->free_list_header + 1 < GetBlockCount()
-            ? page->free_list_header + 1
-            : NEXT_FREE_LIST_ITEM_IS_OUT_OF_RANGE;
-    }
-
-    page->free_list_header = new_free_list_header;
-
-    return (void*) ((char*) free_block + GetControlBlockSize());
+    return (void*) free_block;
 }
 
 void FSA::Free(void *p) {
-    auto *blockToFree = (FSABlockMetaData*) ((char*) p - GetControlBlockSize());
-    size_t actualBlockSize = GetActualBlockSize();
-    int block_idx = blockToFree->block_idx;
-    auto *page = (FSAPage*) ((char*) blockToFree - actualBlockSize * block_idx - sizeof(FSAPage));
-    blockToFree->next_free_list_idx = page->free_list_header;
-    page->free_list_header = block_idx;
+    FSAPage *page = first_page_;
+
+    while (page != nullptr) {
+
+        if (page->Contains(p)) {
+            auto *blockToFree = (FSABlockMetaData*) p;
+
+            unsigned long p_offset_from_page = ((char *) p) - ((char *) page);
+            int block_idx = (int) (p_offset_from_page / block_size_);
+
+            blockToFree->next_free_list_idx = page->free_list_header;
+            page->free_list_header = block_idx;
+
+            break;
+        }
+
+        page = page->next_page;
+    }
 }
 
-size_t FSA::GetControlBlockSize() {
-    return sizeof(FSABlockMetaData) + sizeof(CommonBlockMetaData);
+bool FSA::Contains(void *p) {
+    FSAPage *page = first_page_;
+    
+    while (page != nullptr) {
+
+        if (page->Contains(p))
+            return true;
+
+        page = page->next_page;
+    }
 }

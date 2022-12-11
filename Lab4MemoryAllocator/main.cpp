@@ -12,6 +12,7 @@ int main() {
     *d = 123;
     ch = "dfjsdfoisjoiefjoiesfjseiofj";
 
+    std::cout << sizeof(FSAPage) << std::endl;
     std::cout << *a << " " << *d << " " << ch << std::endl;
 
     *a = 34;
@@ -27,14 +28,15 @@ int main() {
 
     std::cout << *a << " " << *d << std::endl;
 
-    for (int i = 0; i < 128; ++i) {
-        std::cout << i << std::endl;
-        allocator.alloc(sizeof(int));
+    for (int i = 0; i < 2050; ++i) {
+        allocator.alloc(512);
     }
 
     allocator.free(d);
 
     allocator.alloc(sizeof(char));
+
+    allocator.destroy();
 
     return 0;
 }
