@@ -12,5 +12,6 @@ static const int MIN_FSA_BLOCK_SIZE = 16;
 
 // Coalesce allocator constants
 static const int MAX_COALESCE_REQUEST_SIZE = 1024 * 1024 * 10;
+static const int COALESCE_ALLOCATOR_MEMORY_ALIGNMENT = 8;
 
 #endif //LAB4MEMORYALLOCATOR_MEMORYALLOCATORCONSTANTS_H

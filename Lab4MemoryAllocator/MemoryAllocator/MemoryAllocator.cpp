@@ -12,7 +12,9 @@ MemoryAllocator::~MemoryAllocator() {
 
 void MemoryAllocator::init() {
     for (auto & fsa : fsa_list_)
-        fsa.AllocFirstPage(PageSizeBytes);
+        fsa.AllocFirstPage(FSAPageSize);
+
+    coalesce_allocator_.AllocFirstPage(CoalesceAllocatorPageSize);
 }
 
 void MemoryAllocator::destroy() {
@@ -44,6 +46,10 @@ void *MemoryAllocator::free(void *p) {
             fsa.Free(p);
             break;
         }
+    }
+
+    if (coalesce_allocator_.Contains(p)) {
+        coalesce_allocator_.Free(p);
     }
 }
 

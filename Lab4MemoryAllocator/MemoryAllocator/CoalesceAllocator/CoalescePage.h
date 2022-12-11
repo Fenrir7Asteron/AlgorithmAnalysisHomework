@@ -21,6 +21,10 @@ public:
 
     bool PointerIsInsidePage(const char *p);
 
+    bool Contains(void *p);
+
+    size_t GetRemainingPageMemory(CoalesceBlockMetaData *block_p);
+
 private:
     size_t page_size_;
 };

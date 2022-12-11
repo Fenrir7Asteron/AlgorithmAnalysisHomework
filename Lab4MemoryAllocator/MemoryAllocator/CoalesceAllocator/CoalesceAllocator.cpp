@@ -39,7 +39,7 @@ void CoalesceAllocator::Destroy() {
 }
 
 size_t CoalesceAllocator::GetControlBlockSize() {
-    return sizeof(CoalesceBlockMetaData) + sizeof(CommonBlockMetaData);
+    return GetAlignedMemorySize(sizeof(CoalesceBlockMetaData) + sizeof(CommonBlockMetaData));
 }
 
 void *CoalesceAllocator::Alloc(size_t request_size) {
@@ -58,20 +58,119 @@ void *CoalesceAllocator::Alloc(size_t request_size) {
         }
     } while (free_block == nullptr);
 
-    free_block->block_size = request_size + GetControlBlockSize();
+    if (free_block->block_size == 0) {
+        free_block->block_size = page->GetRemainingPageMemory(free_block);
+    }
+
+    size_t required_memory = GetAlignedMemorySize(request_size + GetControlBlockSize());
+
+    // First-fit search free block.
+    while (required_memory > free_block->block_size && free_block->next_free_list_p != nullptr) {
+        free_block = free_block->next_free_list_p;
+
+        if (free_block->block_size == 0) {
+            free_block->block_size = page->GetRemainingPageMemory(free_block);
+        }
+    }
+
+    free_block->block_size = required_memory;
 
     if (free_block->next_free_list_p == nullptr) {
-        char *block_after_this_block_p = ((char *) free_block) + GetControlBlockSize() + request_size;
-        if (page->PointerIsInsidePage(block_after_this_block_p)) {
-            page->free_list_header = (CoalesceBlockMetaData*) block_after_this_block_p;
-//            free_block->prev_free_list_p =
+        CoalesceBlockMetaData* block_after_this_block_p = (CoalesceBlockMetaData*) (((char *) free_block) + required_memory);
+
+        if (page->PointerIsInsidePage((char*) block_after_this_block_p)) {
+            page->free_list_header = block_after_this_block_p;
+            block_after_this_block_p->l_neighbour_p = free_block;
+
+            if (free_block->prev_free_list_p != nullptr) {
+                free_block->prev_free_list_p->next_free_list_p = block_after_this_block_p;
+                block_after_this_block_p->prev_free_list_p = free_block->prev_free_list_p;
+            }
         } else {
             page->free_list_header = nullptr;
         }
 
     } else {
-        page->free_list_header = free_block->next_free_list_p;
+        CoalesceBlockMetaData* block_after_this_block_p = free_block->next_free_list_p;
+        page->free_list_header = block_after_this_block_p;
+
+        if (free_block->prev_free_list_p != nullptr) {
+            free_block->prev_free_list_p->next_free_list_p = block_after_this_block_p;
+            block_after_this_block_p->prev_free_list_p = free_block->prev_free_list_p;
+        }
     }
 
-    return (void*) ((char*) free_block + GetControlBlockSize());
+    void* used_data_p = (void *) ((char *) free_block + GetControlBlockSize());
+
+    free_block->Occupy(used_data_p);
+
+    return used_data_p;
+}
+
+size_t CoalesceAllocator::GetAlignedMemorySize(size_t memory_size) {
+    return (memory_size - 1 + COALESCE_ALLOCATOR_MEMORY_ALIGNMENT) / COALESCE_ALLOCATOR_MEMORY_ALIGNMENT * COALESCE_ALLOCATOR_MEMORY_ALIGNMENT;
+}
+
+bool CoalesceAllocator::Contains(void *p) {
+    CoalescePage *page = first_page_;
+
+    while (page != nullptr) {
+
+        if (page->Contains(p))
+            return true;
+
+        page = page->next_page;
+    }
+}
+
+void CoalesceAllocator::Free(void *p) {
+    CoalescePage *page = first_page_;
+
+    while (page != nullptr) {
+
+        if (page->Contains(p)) {
+            auto *blockToFree = (CoalesceBlockMetaData *) ((char *) p - CoalesceAllocator::GetControlBlockSize());
+
+            blockToFree->next_free_list_p = page->free_list_header;
+            if (blockToFree->next_free_list_p != nullptr)
+                blockToFree->next_free_list_p->prev_free_list_p = blockToFree;
+            
+            page->free_list_header = blockToFree;
+            
+            if (HasFreeRightNeighbour(blockToFree, page)) {
+                CoalesceBlockMetaData *r_neighbour_p = blockToFree->GetRightNeighbourP();
+                if (r_neighbour_p->prev_free_list_p != nullptr) {
+                    r_neighbour_p->prev_free_list_p->next_free_list_p = r_neighbour_p->next_free_list_p;
+                }
+
+                if (r_neighbour_p->block_size == 0)
+                    page->GetRemainingPageMemory(r_neighbour_p);
+                    
+                blockToFree->block_size += r_neighbour_p->block_size;
+            }
+
+            if (HasFreeLeftNeighbour(blockToFree)) {
+                page->free_list_header = blockToFree->l_neighbour_p;
+                blockToFree->Cleanup();
+            }
+
+            page->free_list_header->Unoccupy();
+
+            break;
+        }
+
+        page = page->next_page;
+    }
+}
+
+bool CoalesceAllocator::HasFreeRightNeighbour(CoalesceBlockMetaData *block_p, CoalescePage *page) const {
+    CoalesceBlockMetaData *r_neighbour_p = block_p->GetRightNeighbourP();
+
+    return page->PointerIsInsidePage((char*) r_neighbour_p) && r_neighbour_p != nullptr
+           && r_neighbour_p->is_occupied == false;
+}
+
+bool
+CoalesceAllocator::HasFreeLeftNeighbour(const CoalesceBlockMetaData *block_p) const {
+    return block_p->l_neighbour_p != nullptr && block_p->l_neighbour_p->is_occupied == false;
 }

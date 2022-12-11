@@ -20,7 +20,8 @@ public:
 
 private:
     static const int FSACount = 6;
-    const int PageSizeBytes = 1024 * 1024;
+    const int FSAPageSize = 1024 * 1024; // 1MB
+    const int CoalesceAllocatorPageSize = 20 * 1024 * 1024; // 20MB
     bool is_destroyed_;
 
     FSA fsa_list_[FSACount];
