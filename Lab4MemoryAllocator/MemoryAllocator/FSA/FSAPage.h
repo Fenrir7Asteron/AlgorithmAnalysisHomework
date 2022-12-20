@@ -21,6 +21,8 @@ public:
     void Free();
 
     bool Contains(void *p);
+
+    static const int &GetNumberOfControlBlocks(const int block_size) ;
 };
 
 

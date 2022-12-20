@@ -8,8 +8,10 @@
 
 void CoalescePage::Init(size_t page_size) {
     next_page = nullptr;
-    free_list_header = (CoalesceBlockMetaData*) (((char*) this) + sizeof(CoalescePage));
     page_size_ = page_size;
+    free_list_header = (CoalesceBlockMetaData*) (((char*) this) + sizeof(CoalescePage));
+
+    free_list_header->block_size = page_size_;
 }
 
 CoalescePage *CoalescePage::AllocNewPage(size_t page_size) {

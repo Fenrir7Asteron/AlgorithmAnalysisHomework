@@ -33,6 +33,10 @@ private:
     bool HasFreeLeftNeighbour(const CoalesceBlockMetaData *block_p) const;
 
     bool HasFreeRightNeighbour(CoalesceBlockMetaData *block_p, CoalescePage *page) const;
+
+#if DEBUG
+    void DumpStat() const;
+#endif
 };
 
 

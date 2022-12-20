@@ -6,6 +6,11 @@
 #include "CoalesceBlockMetaData.h"
 #include "../CommonBlockMetaData.h"
 #include "../FSA/FSAPage.h"
+#include "../MemoryAllocator.h"
+
+#if DEBUG
+#include <iostream>
+#endif
 
 void CoalesceAllocator::AllocFirstPage(const int page_size) {
     page_size_ = page_size;
@@ -36,6 +41,17 @@ void CoalesceAllocator::Destroy() {
         page->Free();
         page = next_page;
     } while(page != nullptr);
+
+#if DEBUG
+    for (int idx = MemoryAllocator::occupied_blocks_.size() - 1; idx >= 0; --idx) {
+        auto &block = MemoryAllocator::occupied_blocks_[idx];
+
+        if (block.allocator_type != OccupiedBlock::COALESCE_ALLOCATOR_TYPE_ID)
+            continue;
+
+        MemoryAllocator::RemoveOccupiedBlockFromTrackedList(block.p);
+    }
+#endif
 }
 
 size_t CoalesceAllocator::GetControlBlockSize() {
@@ -75,12 +91,17 @@ void *CoalesceAllocator::Alloc(size_t request_size) {
 
     free_block->block_size = required_memory;
 
+#if DEBUG
+    MemoryAllocator::AddOccupiedBlockToTrackedList(free_block, free_block->block_size, OccupiedBlock::COALESCE_ALLOCATOR_TYPE_ID);
+#endif
+
     if (free_block->next_free_list_p == nullptr) {
         CoalesceBlockMetaData* block_after_this_block_p = (CoalesceBlockMetaData*) (((char *) free_block) + required_memory);
 
         if (page->PointerIsInsidePage((char*) block_after_this_block_p)) {
             page->free_list_header = block_after_this_block_p;
             block_after_this_block_p->l_neighbour_p = free_block;
+            block_after_this_block_p->block_size = page->GetRemainingPageMemory(block_after_this_block_p);
 
             if (free_block->prev_free_list_p != nullptr) {
                 free_block->prev_free_list_p->next_free_list_p = block_after_this_block_p;
@@ -121,6 +142,8 @@ bool CoalesceAllocator::Contains(void *p) {
 
         page = page->next_page;
     }
+
+    return false;
 }
 
 void CoalesceAllocator::Free(void *p) {
@@ -174,3 +197,35 @@ bool
 CoalesceAllocator::HasFreeLeftNeighbour(const CoalesceBlockMetaData *block_p) const {
     return block_p->l_neighbour_p != nullptr && block_p->l_neighbour_p->is_occupied == false;
 }
+
+#if DEBUG
+void CoalesceAllocator::DumpStat() const {
+    int free_blocks_count = 0;
+    int total_blocks_count = 0;
+
+    CoalescePage *page = first_page_;
+
+    while (page != nullptr) {
+
+        CoalesceBlockMetaData *free_block = page->free_list_header;
+
+        while (free_block != nullptr) {
+            free_blocks_count++;
+            total_blocks_count++;
+
+            if (free_blocks_count == 1)
+                std::printf("Coalesce allocator free blocks:\n");
+
+            printf("Coalesce free block address %p size %d\n", free_block, free_block->block_size);
+
+            free_block = free_block->next_free_list_p;
+        }
+
+        page = page->next_page;
+    }
+
+    printf("Coalesce allocator free blocks count: %d\n\n", free_blocks_count);
+
+    MemoryAllocator::PrintCoalesceAllocatedBlocks();
+}
+#endif

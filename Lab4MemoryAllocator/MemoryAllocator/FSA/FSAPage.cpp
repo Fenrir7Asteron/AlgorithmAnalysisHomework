@@ -10,7 +10,7 @@
 
 void FSAPage::Init(const int block_count, const int block_size) {
     next_page = nullptr;
-    free_list_header = std::max(1, (int) sizeof(FSAPage) / block_size);
+    free_list_header = GetNumberOfControlBlocks(block_size);
     page_size_ = block_count * block_size;
     block_size_ = block_size;
 
@@ -24,6 +24,10 @@ void FSAPage::Init(const int block_count, const int block_size) {
 
         fsa_block_meta_data->fsa_idx = sqrt(block_size) - sqrt(MIN_FSA_BLOCK_SIZE);
     }
+}
+
+const int &FSAPage::GetNumberOfControlBlocks(const int block_size) {
+    return std::max(1, (int) sizeof(FSAPage) / block_size);
 }
 
 FSAPage *FSAPage::AllocNewPage(size_t page_size) {

@@ -29,11 +29,15 @@ private:
 
     size_t GetActualBlockSize() const;
 
-    int GetBlockCount() const;
+    int GetPageBlockCount() const;
 
     void Free(void *p);
 
     bool Contains(void *p);
+
+#ifdef DEBUG
+    void DumpStat() const;
+#endif
 };
 
 

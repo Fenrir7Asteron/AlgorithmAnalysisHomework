@@ -5,6 +5,10 @@
 #include "FSA.h"
 #include "FSABlockMetaData.h"
 
+#ifdef DEBUG
+#include <iostream>
+#endif
+
 FSA::FSA(int block_size) {
     block_size_ = block_size;
 }
@@ -13,7 +17,7 @@ void FSA::AllocFirstPage(const int page_size) {
     page_size_ = page_size;
 
     first_page_ = FSAPage::AllocNewPage(page_size_);
-    first_page_->Init(GetBlockCount(), block_size_);
+    first_page_->Init(GetPageBlockCount(), block_size_);
 }
 
 void FSA::AllocNewPage() {
@@ -23,7 +27,7 @@ void FSA::AllocNewPage() {
     }
 
     last_page->next_page = FSAPage::AllocNewPage(page_size_);
-    last_page->next_page->Init(GetBlockCount(), block_size_);
+    last_page->next_page->Init(GetPageBlockCount(), block_size_);
 }
 
 void FSA::Destroy() {
@@ -33,9 +37,11 @@ void FSA::Destroy() {
         page->Free();
         page = next_page;
     } while(page != nullptr);
+
+    first_page_ = nullptr;
 }
 
-int FSA::GetBlockCount() const { return page_size_ / block_size_; }
+int FSA::GetPageBlockCount() const { return page_size_ / block_size_; }
 
 void *FSA::Alloc() {
     FSAPage *page = first_page_;
@@ -89,4 +95,33 @@ bool FSA::Contains(void *p) {
 
         page = page->next_page;
     }
+
+    return false;
 }
+
+#ifdef DEBUG
+void FSA::DumpStat() const {
+    int free_blocks_count = 0;
+    int total_blocks_count = 0;
+
+    FSAPage *page = first_page_;
+
+    while (page != nullptr) {
+
+        int free_idx = page->free_list_header;
+
+        while (free_idx != NEXT_FREE_LIST_ITEM_IS_OUT_OF_RANGE) {
+            free_blocks_count++;
+
+            auto *block = (FSABlockMetaData *) (((char *) page) + (free_idx * block_size_));
+            free_idx = block->next_free_list_idx;
+        }
+
+        page = page->next_page;
+        total_blocks_count += GetPageBlockCount() - FSAPage::GetNumberOfControlBlocks(block_size_);
+    }
+
+    int occupied_blocks_count = total_blocks_count - free_blocks_count;
+    printf("FSA %d blocks occupied %d/%d\n", block_size_, occupied_blocks_count, total_blocks_count);
+}
+#endif
