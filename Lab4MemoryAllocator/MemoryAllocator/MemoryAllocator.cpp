@@ -18,11 +18,13 @@ MemoryAllocator::MemoryAllocator() :
 {}
 
 MemoryAllocator::~MemoryAllocator() {
-    assert(is_initialized_);
+    assert(!is_initialized_);
     assert(is_destroyed_);
 }
 
 void MemoryAllocator::init() {
+    assert(!is_initialized_);
+
     for (auto & fsa : fsa_list_)
         fsa.AllocFirstPage(FSAPageSize);
 
@@ -30,11 +32,13 @@ void MemoryAllocator::init() {
 
 #if DEBUG
     is_initialized_ = true;
+    is_destroyed_ = false;
 #endif
 }
 
 void MemoryAllocator::destroy() {
     assert(is_initialized_);
+    assert(!is_destroyed_);
     assert(occupied_blocks_.empty() && "Memory leak detected. Some memory has not been freed before allocator destruction.");
 
     DestroyFSA();
@@ -44,6 +48,7 @@ void MemoryAllocator::destroy() {
     occupied_blocks_.clear();
 
 #if DEBUG
+    is_initialized_ = false;
     is_destroyed_ = true;
 #endif
 }

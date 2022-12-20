@@ -79,5 +79,15 @@ int main() {
 //    allocator.free(d);
     allocator.destroy();
 
+    allocator.init();
+
+    a = (int*) allocator.alloc(sizeof(int));
+    d = (int*) allocator.alloc(sizeof(int));
+
+    allocator.free(a);
+    allocator.free(d);
+
+    allocator.destroy();
+
     return 0;
 }
