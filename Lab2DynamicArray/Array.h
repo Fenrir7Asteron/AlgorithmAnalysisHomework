@@ -37,6 +37,14 @@ public:
 
     Array<T>& operator =(const Array<T>& other) {
         if (this != &other) {
+            if (size_ > 0) {
+                for (int i = 0; i < size_; ++i) {
+                    array_[i].~T();
+                }
+
+                free(array_);
+            }
+
             capacity_ = other.capacity_;
             size_ = other.size();
             T* new_array = (T*) malloc((capacity_ * sizeof(T)));
@@ -61,6 +69,14 @@ public:
 
     Array<T>& operator =(Array<T>&& other)  noexcept {
         if (this != &other) {
+            if (size_ > 0) {
+                for (int i = 0; i < size_; ++i) {
+                    array_[i].~T();
+                }
+
+                free(array_);
+            }
+
             capacity_ = other.capacity_;
             size_ = other.size();
             array_ = other.array_;
