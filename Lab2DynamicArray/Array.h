@@ -35,6 +35,28 @@ public:
         array_ = new_array;
     }
 
+    Array<T>& operator =(const Array<T>& other) {
+        if (this != &other) {
+            if (size_ > 0) {
+                for (int i = 0; i < size_; ++i) {
+                    array_[i].~T();
+                }
+
+                free(array_);
+            }
+
+            capacity_ = other.capacity_;
+            size_ = other.size();
+            T* new_array = (T*) malloc((capacity_ * sizeof(T)));
+
+            for (int i = 0; i < other.size(); ++i) {
+                new (new_array + i) T(std::move(other[i]));
+            }
+
+            array_ = new_array;
+        }
+    }
+
     Array(Array<T>&& other)  noexcept {
         capacity_ = other.capacity_;
         size_ = other.size();
@@ -42,6 +64,27 @@ public:
 
         other.array_ = nullptr;
         other.size_ = 0;
+        other.capacity_ = 0;
+    }
+
+    Array<T>& operator =(Array<T>&& other)  noexcept {
+        if (this != &other) {
+            if (size_ > 0) {
+                for (int i = 0; i < size_; ++i) {
+                    array_[i].~T();
+                }
+
+                free(array_);
+            }
+
+            capacity_ = other.capacity_;
+            size_ = other.size();
+            array_ = other.array_;
+
+            other.array_ = nullptr;
+            other.size_ = 0;
+            other.capacity_ = 0;
+        }
     }
 
     ~Array() {

@@ -49,7 +49,7 @@ int main()
         total_time_insertion /= TEST_COUNT;
 
 //        cout << std::setprecision(6);
-        cout << fixed << std::setprecision(6) << total_time_quick << " " << fixed << std::setprecision(6) << total_time_insertion << endl;
+        cout << test_size << " " << fixed << std::setprecision(6) << total_time_quick << " " << fixed << std::setprecision(6) << total_time_insertion << endl;
     }
 
     return 0;

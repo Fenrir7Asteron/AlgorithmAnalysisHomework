@@ -94,6 +94,204 @@ TEST(DynamicArrayTestCase, ArrayStringInsertWithIndexCheck) {
     ASSERT_STREQ(array[3].c_str(), "kweh");
 }
 
+TEST(DynamicArrayTestCase, ArrayCopyConstructor) {
+    Array<string> array = Array<string>();
+
+    array.insert(0, "abc");
+    ASSERT_EQ(array.size(), 1);
+    ASSERT_STREQ(array[0].c_str(), "abc");
+
+    array.insert(0, "qwe");
+    ASSERT_EQ(array.size(), 2);
+    ASSERT_STREQ(array[0].c_str(), "qwe");
+    ASSERT_STREQ(array[1].c_str(), "abc");
+
+    array.insert(2, "kweh");
+    ASSERT_EQ(array.size(), 3);
+    ASSERT_STREQ(array[0].c_str(), "qwe");
+    ASSERT_STREQ(array[1].c_str(), "abc");
+    ASSERT_STREQ(array[2].c_str(), "kweh");
+
+    array.insert(1, "kupo");
+    ASSERT_EQ(array.size(), 4);
+    ASSERT_STREQ(array[0].c_str(), "qwe");
+    ASSERT_STREQ(array[1].c_str(), "kupo");
+    ASSERT_STREQ(array[2].c_str(), "abc");
+    ASSERT_STREQ(array[3].c_str(), "kweh");
+
+    Array<string> new_array = Array<string>(array);
+    ASSERT_EQ(new_array.size(), 4);
+    ASSERT_STREQ(new_array[0].c_str(), "qwe");
+    ASSERT_STREQ(new_array[1].c_str(), "kupo");
+    ASSERT_STREQ(new_array[2].c_str(), "abc");
+    ASSERT_STREQ(new_array[3].c_str(), "kweh");
+}
+
+TEST(DynamicArrayTestCase, ArrayCopyAssignment) {
+    Array<string> array = Array<string>();
+
+    array.insert(0, "abc");
+    ASSERT_EQ(array.size(), 1);
+    ASSERT_STREQ(array[0].c_str(), "abc");
+
+    array.insert(0, "qwe");
+    ASSERT_EQ(array.size(), 2);
+    ASSERT_STREQ(array[0].c_str(), "qwe");
+    ASSERT_STREQ(array[1].c_str(), "abc");
+
+    array.insert(2, "kweh");
+    ASSERT_EQ(array.size(), 3);
+    ASSERT_STREQ(array[0].c_str(), "qwe");
+    ASSERT_STREQ(array[1].c_str(), "abc");
+    ASSERT_STREQ(array[2].c_str(), "kweh");
+
+    array.insert(1, "kupo");
+    ASSERT_EQ(array.size(), 4);
+    ASSERT_STREQ(array[0].c_str(), "qwe");
+    ASSERT_STREQ(array[1].c_str(), "kupo");
+    ASSERT_STREQ(array[2].c_str(), "abc");
+    ASSERT_STREQ(array[3].c_str(), "kweh");
+
+    Array<string> new_array = array;
+    ASSERT_EQ(new_array.size(), 4);
+    ASSERT_STREQ(new_array[0].c_str(), "qwe");
+    ASSERT_STREQ(new_array[1].c_str(), "kupo");
+    ASSERT_STREQ(new_array[2].c_str(), "abc");
+    ASSERT_STREQ(new_array[3].c_str(), "kweh");
+}
+
+TEST(DynamicArrayTestCase, ArrayCopyAssignmentSelf) {
+    Array<string> array = Array<string>();
+
+    array.insert(0, "abc");
+    ASSERT_EQ(array.size(), 1);
+    ASSERT_STREQ(array[0].c_str(), "abc");
+
+    array.insert(0, "qwe");
+    ASSERT_EQ(array.size(), 2);
+    ASSERT_STREQ(array[0].c_str(), "qwe");
+    ASSERT_STREQ(array[1].c_str(), "abc");
+
+    array.insert(2, "kweh");
+    ASSERT_EQ(array.size(), 3);
+    ASSERT_STREQ(array[0].c_str(), "qwe");
+    ASSERT_STREQ(array[1].c_str(), "abc");
+    ASSERT_STREQ(array[2].c_str(), "kweh");
+
+    array.insert(1, "kupo");
+    ASSERT_EQ(array.size(), 4);
+    ASSERT_STREQ(array[0].c_str(), "qwe");
+    ASSERT_STREQ(array[1].c_str(), "kupo");
+    ASSERT_STREQ(array[2].c_str(), "abc");
+    ASSERT_STREQ(array[3].c_str(), "kweh");
+
+    array = array;
+    ASSERT_EQ(array.size(), 4);
+    ASSERT_STREQ(array[0].c_str(), "qwe");
+    ASSERT_STREQ(array[1].c_str(), "kupo");
+    ASSERT_STREQ(array[2].c_str(), "abc");
+    ASSERT_STREQ(array[3].c_str(), "kweh");
+}
+
+TEST(DynamicArrayTestCase, ArrayMoveConstructor) {
+    Array<string> array = Array<string>();
+
+    array.insert(0, "abc");
+    ASSERT_EQ(array.size(), 1);
+    ASSERT_STREQ(array[0].c_str(), "abc");
+
+    array.insert(0, "qwe");
+    ASSERT_EQ(array.size(), 2);
+    ASSERT_STREQ(array[0].c_str(), "qwe");
+    ASSERT_STREQ(array[1].c_str(), "abc");
+
+    array.insert(2, "kweh");
+    ASSERT_EQ(array.size(), 3);
+    ASSERT_STREQ(array[0].c_str(), "qwe");
+    ASSERT_STREQ(array[1].c_str(), "abc");
+    ASSERT_STREQ(array[2].c_str(), "kweh");
+
+    array.insert(1, "kupo");
+    ASSERT_EQ(array.size(), 4);
+    ASSERT_STREQ(array[0].c_str(), "qwe");
+    ASSERT_STREQ(array[1].c_str(), "kupo");
+    ASSERT_STREQ(array[2].c_str(), "abc");
+    ASSERT_STREQ(array[3].c_str(), "kweh");
+
+    Array<string> new_array = Array<string>(std::move(array));
+    ASSERT_EQ(new_array.size(), 4);
+    ASSERT_STREQ(new_array[0].c_str(), "qwe");
+    ASSERT_STREQ(new_array[1].c_str(), "kupo");
+    ASSERT_STREQ(new_array[2].c_str(), "abc");
+    ASSERT_STREQ(new_array[3].c_str(), "kweh");
+}
+
+TEST(DynamicArrayTestCase, ArrayMoveAssignment) {
+    Array<string> array = Array<string>();
+
+    array.insert(0, "abc");
+    ASSERT_EQ(array.size(), 1);
+    ASSERT_STREQ(array[0].c_str(), "abc");
+
+    array.insert(0, "qwe");
+    ASSERT_EQ(array.size(), 2);
+    ASSERT_STREQ(array[0].c_str(), "qwe");
+    ASSERT_STREQ(array[1].c_str(), "abc");
+
+    array.insert(2, "kweh");
+    ASSERT_EQ(array.size(), 3);
+    ASSERT_STREQ(array[0].c_str(), "qwe");
+    ASSERT_STREQ(array[1].c_str(), "abc");
+    ASSERT_STREQ(array[2].c_str(), "kweh");
+
+    array.insert(1, "kupo");
+    ASSERT_EQ(array.size(), 4);
+    ASSERT_STREQ(array[0].c_str(), "qwe");
+    ASSERT_STREQ(array[1].c_str(), "kupo");
+    ASSERT_STREQ(array[2].c_str(), "abc");
+    ASSERT_STREQ(array[3].c_str(), "kweh");
+
+    Array<string> new_array = std::move(array);
+    ASSERT_EQ(new_array.size(), 4);
+    ASSERT_STREQ(new_array[0].c_str(), "qwe");
+    ASSERT_STREQ(new_array[1].c_str(), "kupo");
+    ASSERT_STREQ(new_array[2].c_str(), "abc");
+    ASSERT_STREQ(new_array[3].c_str(), "kweh");
+}
+
+TEST(DynamicArrayTestCase, ArrayMoveAssignmentSelf) {
+    Array<string> array = Array<string>();
+
+    array.insert(0, "abc");
+    ASSERT_EQ(array.size(), 1);
+    ASSERT_STREQ(array[0].c_str(), "abc");
+
+    array.insert(0, "qwe");
+    ASSERT_EQ(array.size(), 2);
+    ASSERT_STREQ(array[0].c_str(), "qwe");
+    ASSERT_STREQ(array[1].c_str(), "abc");
+
+    array.insert(2, "kweh");
+    ASSERT_EQ(array.size(), 3);
+    ASSERT_STREQ(array[0].c_str(), "qwe");
+    ASSERT_STREQ(array[1].c_str(), "abc");
+    ASSERT_STREQ(array[2].c_str(), "kweh");
+
+    array.insert(1, "kupo");
+    ASSERT_EQ(array.size(), 4);
+    ASSERT_STREQ(array[0].c_str(), "qwe");
+    ASSERT_STREQ(array[1].c_str(), "kupo");
+    ASSERT_STREQ(array[2].c_str(), "abc");
+    ASSERT_STREQ(array[3].c_str(), "kweh");
+
+    array = std::move(array);
+    ASSERT_EQ(array.size(), 4);
+    ASSERT_STREQ(array[0].c_str(), "qwe");
+    ASSERT_STREQ(array[1].c_str(), "kupo");
+    ASSERT_STREQ(array[2].c_str(), "abc");
+    ASSERT_STREQ(array[3].c_str(), "kweh");
+}
+
 TEST(DynamicArrayTestCase, ArrayStringRemoveCheck) {
     Array<string> array = Array<string>();
     array.insert("abc");

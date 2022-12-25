@@ -1,0 +1,12 @@
+//
+// Created by biore on 12/10/2022.
+//
+
+#ifndef LAB4MEMORYALLOCATOR_IMEMORYPAGE_H
+#define LAB4MEMORYALLOCATOR_IMEMORYPAGE_H
+
+class IMemoryPage {
+
+};
+
+#endif //LAB4MEMORYALLOCATOR_IMEMORYPAGE_H

@@ -30,5 +30,20 @@ int main() {
     }
     cout << endl;
 
+    auto c = std::move(b);
+
+    b = b;
+
+    b.insert(1234);
+    for (auto it = b.reverseIteratorBegin(), end = b.reverseIteratorEnd(); it < end; ++it) {
+        cout << *it << " ";
+    }
+    cout << endl;
+
+    for (auto it = c.reverseIteratorBegin(), end = c.reverseIteratorEnd(); it < end; ++it) {
+        cout << *it << " ";
+    }
+    cout << endl;
+
     return 0;
 }
